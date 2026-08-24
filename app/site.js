@@ -115,7 +115,6 @@ async function renderPlayerSpotlight(target, pool, type = 'football') {
 }
 
 function refreshPlayerSpotlights() {
-  renderPlayerSpotlight('#home-player-spotlight', featuredPool('all'));
   renderPlayerSpotlight('#football-player-spotlight', featuredPool(state.competition));
   renderPlayerSpotlight('#f1-player-spotlight', featuredPool('formula1'), 'f1');
 }
