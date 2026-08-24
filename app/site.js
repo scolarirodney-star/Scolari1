@@ -34,11 +34,13 @@ const MEDIA = {
     url: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Well_lit_soccer_stadium_%28Unsplash%29.jpg',
     alt: 'Estadio de fútbol iluminado durante la noche',
     credit: 'Imagen ilustrativa · Mario Klassen · CC0',
+    source: 'https://commons.wikimedia.org/wiki/File:Well_lit_soccer_stadium_(Unsplash).jpg',
   },
   f1: {
     url: 'https://images.pexels.com/photos/11211273/pexels-photo-11211273.jpeg?auto=compress&dpr=1&h=750&w=1260',
     alt: 'Monoplaza de competición en un circuito',
     credit: 'Imagen ilustrativa · PRAT clement · Pexels',
+    source: 'https://www.pexels.com/photo/a-formula-1-car-on-a-race-track-11211273/',
   },
 };
 
@@ -130,14 +132,14 @@ function newsCard(article) {
   const competition = article.sport === 'football' ? competitionById(article.competition) : null;
   const category = competition?.name || 'Fórmula 1';
   const status = state.editorial[article.id];
-  const media = MEDIA[article.sport];
+  const media = article.media || MEDIA[article.sport];
   return `
     <article class="news-card ${article.sport === 'f1' ? 'f1-card' : ''}">
       <div class="news-visual">
         <img class="news-image" src="${media.url}" alt="${media.alt}" loading="lazy" decoding="async">
         <span class="visual-code">${article.visual}</span>
         <span class="card-status">Demo · ${status}</span>
-        <span class="media-credit">${media.credit}</span>
+        <a class="media-credit" href="${media.source || article.url}" target="_blank" rel="noreferrer">${media.credit}</a>
       </div>
       <div class="news-body">
         <div class="news-meta"><span class="news-category">${article.sport === 'football' ? 'Fútbol' : 'Fórmula 1'} · ${category}</span><span>${article.published}</span></div>
