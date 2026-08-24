@@ -407,6 +407,7 @@ function renderFootball() {
     </table>
     <p class="data-note">Última revisión editorial: 24 ago 2026. El estado “En vivo” solo se habilitará cuando exista una conexión autorizada que confirme el inicio del evento. Confirmá siempre el horario definitivo en la fuente original.</p>` : emptyState('Sin próximos partidos verificados', 'La fuente o API autorizada para esta competición todavía no está conectada.');
   hydrateTeamLogos($('#football-news-panel'));
+  hydrateTeamLogos($('#football-standings-panel'));
   hydrateTeamLogos($('#football-results-panel'));
   hydrateTeamLogos($('#football-upcoming-panel'));
 }
