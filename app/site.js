@@ -44,6 +44,86 @@ const MEDIA = {
   },
 };
 
+const FEATURED_PEOPLE = {
+  laliga: ['Kylian Mbappé', 'Lamine Yamal', 'Vinícius Júnior', 'Jude Bellingham', 'Rodri'],
+  ligue1: ['Ousmane Dembélé', 'Khvicha Kvaratskhelia', 'Vitinha', 'João Neves', 'Achraf Hakimi'],
+  bundesliga: ['Harry Kane', 'Michael Olise', 'Luis Díaz', 'Joshua Kimmich', 'Jamal Musiala'],
+  champions: ['Kylian Mbappé', 'Lamine Yamal', 'Erling Haaland', 'Ousmane Dembélé', 'Jude Bellingham'],
+  paraguay: ['Roque Santa Cruz', 'Derlis González', 'Óscar Cardozo', 'Lorenzo Melgarejo', 'Sebastián Ferreira'],
+  premier: ['Erling Haaland', 'Mohamed Salah', 'Bukayo Saka', 'Cole Palmer', 'Florian Wirtz'],
+  formula1: ['George Russell', 'Kimi Antonelli', 'Lando Norris', 'Oscar Piastri', 'Max Verstappen'],
+};
+
+const PERSON_WIKI_TITLES = {
+  'Rodri': 'Rodri (footballer, born 1996)', 'Vitinha': 'Vitinha (footballer, born February 2000)',
+  'Luis Díaz': 'Luis Díaz (footballer, born 1997)', 'Derlis González': 'Derlis González',
+  'Óscar Cardozo': 'Óscar Cardozo', 'Sebastián Ferreira': 'Sebastián Ferreira',
+  'Kimi Antonelli': 'Andrea Kimi Antonelli',
+};
+
+const personPhotoCache = new Map();
+let spotlightStep = Math.floor(Math.random() * 5);
+
+async function resolvePersonPhoto(name, type = 'football') {
+  const cacheKey = `${type}:${name}`;
+  if (personPhotoCache.has(cacheKey)) return personPhotoCache.get(cacheKey);
+  const request = (async () => {
+    let title = PERSON_WIKI_TITLES[name] || name;
+    let response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+    if (!response.ok) {
+      const query = `${name} ${type === 'f1' ? 'racing driver' : 'footballer'}`;
+      const search = await fetch(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=1`);
+      if (!search.ok) return null;
+      title = (await search.json()).pages?.[0]?.key;
+      if (!title) return null;
+      response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+    }
+    if (!response.ok) return null;
+    const data = await response.json();
+    const image = data.originalimage?.source || data.thumbnail?.source;
+    if (!image) return null;
+    return { image, page: data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}` };
+  })().catch(() => null);
+  personPhotoCache.set(cacheKey, request);
+  return request;
+}
+
+function featuredPool(competition = 'all') {
+  if (competition !== 'all' && FEATURED_PEOPLE[competition]) return FEATURED_PEOPLE[competition].map((name) => ({ name, competition }));
+  return Object.entries(FEATURED_PEOPLE).flatMap(([key, names]) => names.map((name) => ({ name, competition: key })));
+}
+
+function featuredLabel(key) {
+  if (key === 'formula1') return 'Fórmula 1';
+  return competitionById(key)?.name || 'Fútbol internacional';
+}
+
+async function renderPlayerSpotlight(target, pool, type = 'football') {
+  const container = $(target);
+  if (!container || !pool.length) return;
+  const person = pool[spotlightStep % pool.length];
+  const initials = person.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join('');
+  container.classList.remove('has-player-photo');
+  container.innerHTML = `<div class="player-photo-shell"><span>${initials}</span><img alt="Retrato de ${person.name}" loading="eager" decoding="async"></div><div class="player-caption"><small>PROTAGONISTA · ROTACIÓN 30 S</small><strong>${person.name}</strong><span>${featuredLabel(person.competition)}</span><a href="#" target="_blank" rel="noreferrer">Imagen vía Wikipedia/Wikimedia · licencia en origen ↗</a></div>`;
+  const photo = await resolvePersonPhoto(person.name, type);
+  if (!photo || !container.isConnected || !container.textContent.includes(person.name)) return;
+  const image = $('img', container);
+  image.addEventListener('load', () => container.classList.add('has-player-photo'), { once: true });
+  image.src = photo.image;
+  $('a', container).href = photo.page;
+}
+
+function refreshPlayerSpotlights() {
+  renderPlayerSpotlight('#home-player-spotlight', featuredPool('all'));
+  renderPlayerSpotlight('#football-player-spotlight', featuredPool(state.competition));
+  renderPlayerSpotlight('#f1-player-spotlight', featuredPool('formula1'), 'f1');
+}
+
+setInterval(() => {
+  spotlightStep += 1;
+  refreshPlayerSpotlights();
+}, 30000);
+
 const IDENTITY_COLORS = {
   'Olimpia': ['#f4f4f0', '#111719'], 'Cerro Porteño': ['#e23d45', '#173f83'], 'Libertad': ['#f4f4f4', '#171717'],
   'Guaraní': ['#f2c13d', '#151515'], 'Sportivo Ameliano': ['#2c65a8', '#f5f6f7'], 'Trinidense': ['#e8c433', '#173b7a'],
@@ -282,6 +362,7 @@ function renderFootball() {
   const articles = footballArticles();
   $('#football-news').innerHTML = articles.length ? articles.map(newsCard).join('') : emptyState('Sin noticias para esta búsqueda', 'La competición sí está disponible, pero no encontramos publicaciones que coincidan con el texto ingresado.');
   renderFootballStandings();
+  renderPlayerSpotlight('#football-player-spotlight', featuredPool(state.competition));
 
   renderResultLeagueFilter();
   renderResultClubFilter();
@@ -311,6 +392,7 @@ function constructorRows() {
 }
 
 function renderF1() {
+  renderPlayerSpotlight('#f1-player-spotlight', featuredPool('formula1'), 'f1');
   const articles = ARTICLES.filter((article) => article.sport === 'f1').sort(byNewest);
   $('#f1-news').innerHTML = articles.map(newsCard).join('');
 
@@ -343,6 +425,7 @@ function setRoute(route) {
   if (route === 'football') renderFootball();
   if (route === 'f1') renderF1();
   if (route === 'admin') renderAdmin();
+  refreshPlayerSpotlights();
   window.scrollTo({ top: 0, behavior: 'smooth' });
   history.replaceState(null, '', route === 'home' ? '#inicio' : `#${route}`);
 }
