@@ -175,6 +175,38 @@ a { color: inherit; text-decoration: none; }
 .filter-panel input, .filter-panel select { width: 100%; height: 42px; padding: 0 12px; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; color-scheme: dark; }
 .filter-panel button { align-self: end; height: 42px; padding: 0 15px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 .competition-rail { padding: 20px clamp(18px, 5vw, 72px); display: flex; gap: 10px; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: thin; }
+.event-scoreboard { min-height: 156px; display: grid; grid-template-columns: 42px 132px minmax(0, 1fr) 42px; color: #101416; background: #e5e8e8; border-bottom: 1px solid #aeb5b7; }
+.scoreboard-arrow { border: 0; border-right: 1px solid #b7bdbe; background: #f3f5f5; color: #182022; font-size: 29px; cursor: pointer; transition: color .2s ease, background .2s ease; }
+.scoreboard-arrow:last-child { border-right: 0; border-left: 1px solid #b7bdbe; }
+.scoreboard-arrow:hover { color: #067e59; background: white; }
+.scoreboard-label { padding: 14px 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; border-right: 1px solid #b7bdbe; text-align: center; }
+.scoreboard-label span { color: #087655; font-size: 21px; font-weight: 1000; font-style: italic; line-height: 1; }
+.scoreboard-label b { max-width: 110px; font-size: 9px; line-height: 1.3; text-transform: uppercase; }
+.scoreboard-label small { color: #6c777a; font-size: 7px; text-transform: uppercase; }
+.event-track { min-width: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.event-track::-webkit-scrollbar { display: none; }
+.event-score-card { flex: 0 0 232px; min-height: 156px; padding: 11px 14px 9px; display: grid; grid-template-rows: auto 1fr 1fr auto; gap: 4px; position: relative; background: #f8f9f9; border-right: 1px solid #b7bdbe; scroll-snap-align: start; }
+.event-score-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--event-color, var(--football)); }
+.event-score-card header, .event-score-card footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.event-score-card header { padding-bottom: 5px; border-bottom: 1px solid #d9dddd; }
+.event-score-card header time { font-size: 11px; font-weight: 1000; white-space: nowrap; }
+.event-score-card header time small { font-size: 7px; font-weight: 750; }
+.event-score-card header > span { color: #687376; font-size: 7px; white-space: nowrap; }
+.scoreboard-team { min-width: 0; display: flex; align-items: center; gap: 9px; }
+.scoreboard-team b { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.event-score-card .team-logo-link { width: 27px; flex: 0 0 27px; }
+.event-score-card .team-identity, .event-score-card .team-identity.has-logo { width: 27px; height: 27px; border: 0; border-radius: 5px; background-color: transparent; box-shadow: none; }
+.event-score-card .team-identity b { font-size: 7px; }
+.event-score-card footer { padding-top: 5px; border-top: 1px solid #d9dddd; color: #697477; font-size: 6px; text-transform: uppercase; }
+.event-score-card footer span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.event-score-card footer a { flex: 0 0 auto; color: #087655; font-weight: 900; }
+.f1-scoreboard .scoreboard-label span, .f1-event-card footer a { color: #c82520; }
+.f1-event-card { --event-color: var(--f1); grid-template-rows: auto 1fr auto auto; }
+.race-strip-title { min-width: 0; align-self: center; }
+.race-strip-title small { display: block; margin-bottom: 3px; color: #6b7578; font-size: 7px; text-transform: uppercase; }
+.race-strip-title b { display: block; overflow: hidden; font-size: 12px; line-height: 1.12; text-overflow: ellipsis; white-space: nowrap; }
+.race-strip-circuit { display: flex; justify-content: space-between; gap: 10px; color: #697477; font-size: 7px; text-transform: uppercase; }
+.race-strip-circuit strong { color: #222a2c; font-size: 8px; }
 .competition-chip { flex: 0 0 auto; min-width: 164px; padding: 15px; display: grid; grid-template-columns: 12px 1fr; gap: 10px; border: 1px solid var(--line); border-radius: 11px; background: transparent; text-align: left; cursor: pointer; }
 .competition-chip i { width: 8px; height: 8px; margin-top: 3px; background: var(--chip-color); border-radius: 50%; box-shadow: 0 0 12px var(--chip-color); }
 .competition-chip b { display: block; font-size: 11px; }.competition-chip small { color: var(--muted); font-size: 8px; }
@@ -353,6 +385,9 @@ dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }.di
   .filter-panel { grid-template-columns: 1fr 1fr; padding: 15px 18px; }.filter-panel label:first-child, .filter-panel label:nth-child(3) { grid-column: 1 / -1; }
   .upcoming-heading { align-items: start; flex-direction: column; }.next-race-card { grid-template-columns: 1fr; }.next-race-card > strong { justify-self: start; }.next-race-card > a { grid-column: 1; }
   .competition-rail, .f1-subnav { padding-left: 18px; }.football-content, .f1-content { padding-top: 28px; }
+  .event-scoreboard { min-height: 146px; grid-template-columns: 34px 78px minmax(0, 1fr) 34px; }
+  .scoreboard-label { padding-inline: 7px; }.scoreboard-label span { font-size: 16px; }.scoreboard-label b { font-size: 7px; }.scoreboard-label small { font-size: 6px; }
+  .event-score-card { flex-basis: 206px; min-height: 146px; padding-inline: 11px; }
   .content-tabs button, .f1-subnav button { padding: 14px 15px; }.data-table th, .data-table td { padding: 13px 12px; }
   .result-filter-bar { align-items: stretch; flex-direction: column; }.result-filter-fields { align-items: stretch; flex-direction: column; }.result-filter-bar select { width: 100%; min-width: 0; }
   .results-league-heading { align-items: start; flex-direction: column; }.matchday-heading { align-items: start; flex-direction: column; gap: 7px; }

@@ -359,11 +359,36 @@ function renderFootballStandings() {
   }).join('')}</div>`;
 }
 
+function renderFootballEventStrip() {
+  const competition = state.competition === 'all' ? null : competitionById(state.competition);
+  const events = filteredFootballData(FOOTBALL_UPCOMING).slice(0, state.competition === 'all' ? 18 : undefined);
+  $('#football-event-label').innerHTML = `<span>${competition?.short || 'FÚTBOL'}</span><b>${competition?.name || (state.region === 'all' ? 'PRÓXIMOS' : state.region)}</b><small>${events.length} eventos</small>`;
+  $('#football-event-track').innerHTML = events.length ? events.map((item) => `
+    <article class="event-score-card" style="--event-color:${competitionById(item.competition)?.color || '#2ee6a6'}">
+      <header><time>${item.time} <small>${item.zone}</small></time><span>${item.date}</span></header>
+      <div class="scoreboard-team">${identityBadge(item.home)}<b>${item.home}</b></div>
+      <div class="scoreboard-team">${identityBadge(item.away)}<b>${item.away}</b></div>
+      <footer><span>${item.round}</span><a href="${item.url}" target="_blank" rel="noreferrer" aria-label="Consultar ${item.home} contra ${item.away} en ${item.source}">${item.source} ↗</a></footer>
+    </article>`).join('') : emptyState('Sin eventos próximos', 'No hay una agenda verificada para este filtro.');
+  hydrateTeamLogos($('#football-event-track'));
+}
+
+function renderF1EventStrip() {
+  $('#f1-event-track').innerHTML = F1_UPCOMING.map((event) => `
+    <article class="event-score-card f1-event-card">
+      <header><time>RONDA ${String(event.round).padStart(2, '0')}</time><span>${event.dates}</span></header>
+      <div class="race-strip-title"><small>${event.country}</small><b>${event.race}</b></div>
+      <div class="race-strip-circuit"><span>CIRCUITO</span><strong>${event.circuit}</strong></div>
+      <footer><span>Próxima carrera</span><a href="${event.url}" target="_blank" rel="noreferrer">${event.source} ↗</a></footer>
+    </article>`).join('');
+}
+
 function renderFootball() {
   const articles = footballArticles();
   $('#football-news').innerHTML = articles.length ? articles.map(newsCard).join('') : emptyState('Sin noticias para esta búsqueda', 'La competición sí está disponible, pero no encontramos publicaciones que coincidan con el texto ingresado.');
   renderFootballStandings();
   renderPlayerSpotlight('#football-player-spotlight', featuredPool(state.competition));
+  renderFootballEventStrip();
 
   renderResultLeagueFilter();
   renderResultClubFilter();
@@ -396,6 +421,7 @@ function constructorRows() {
 
 function renderF1() {
   renderPlayerSpotlight('#f1-player-spotlight', featuredPool('formula1'), 'f1');
+  renderF1EventStrip();
   const articles = ARTICLES.filter((article) => article.sport === 'f1').sort(byNewest);
   $('#f1-news').innerHTML = articles.map(newsCard).join('');
 
@@ -498,6 +524,13 @@ function bindEvents() {
     $('#mobile-nav').hidden = !open;
     $('#menu-button').setAttribute('aria-expanded', String(open));
   });
+
+  $$('[data-event-scroll]').forEach((button) => button.addEventListener('click', () => {
+    const track = document.getElementById(button.dataset.eventScroll);
+    if (!track) return;
+    const direction = Number(button.dataset.scrollDirection || 1);
+    track.scrollBy({ left: direction * Math.min(track.clientWidth * .82, 720), behavior: 'smooth' });
+  }));
 
   $('#competition-rail').addEventListener('click', (event) => {
     const button = event.target.closest('[data-competition]');
