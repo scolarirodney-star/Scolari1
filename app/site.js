@@ -50,7 +50,7 @@ const FEATURED_PEOPLE = {
   bundesliga: ['Harry Kane', 'Michael Olise', 'Luis Díaz', 'Joshua Kimmich', 'Jamal Musiala'],
   champions: ['Kylian Mbappé', 'Lamine Yamal', 'Erling Haaland', 'Ousmane Dembélé', 'Jude Bellingham'],
   paraguay: ['Roque Santa Cruz', 'Derlis González', 'Óscar Cardozo', 'Lorenzo Melgarejo', 'Sebastián Ferreira'],
-  premier: ['Erling Haaland', 'Mohamed Salah', 'Bukayo Saka', 'Cole Palmer', 'Florian Wirtz'],
+  premier: ['Erling Haaland', 'Bruno Fernandes', 'Gabriel Magalhães', 'João Pedro', 'Cole Palmer'],
   formula1: ['George Russell', 'Kimi Antonelli', 'Lando Norris', 'Oscar Piastri', 'Max Verstappen'],
 };
 
@@ -58,7 +58,8 @@ const PERSON_WIKI_TITLES = {
   'Rodri': 'Rodri (footballer, born 1996)', 'Vitinha': 'Vitinha (footballer, born February 2000)',
   'Luis Díaz': 'Luis Díaz (footballer, born 1997)', 'Derlis González': 'Derlis González',
   'Óscar Cardozo': 'Óscar Cardozo', 'Sebastián Ferreira': 'Sebastián Ferreira',
-  'Kimi Antonelli': 'Andrea Kimi Antonelli',
+  'Kimi Antonelli': 'Andrea Kimi Antonelli', 'Gabriel Magalhães': 'Gabriel Magalhães',
+  'João Pedro': 'João Pedro (footballer, born 2001)',
 };
 
 const personPhotoCache = new Map();
