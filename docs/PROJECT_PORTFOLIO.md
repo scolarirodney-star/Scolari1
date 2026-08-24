@@ -1,8 +1,8 @@
-# Portafolio del proyecto Al Ángulo
+# Portafolio del proyecto ScolariX
 
 ## Resumen
 
-Al Ángulo es un prototipo de producto editorial deportivo que reúne fútbol y Fórmula 1 en una sola experiencia. Nació en el chat **“Crea página de fútbol de prueba”** a partir de referencias de UEFA, Formula1.com, APF y Google News.
+ScolariX es un prototipo de producto editorial deportivo que reúne fútbol y Fórmula 1 en una sola experiencia. Nació en el chat **“Crea página de fútbol de prueba”** a partir de referencias de UEFA, Formula1.com, APF y Google News.
 
 Su propuesta central es facilitar la consulta sin ocultar el origen: cada registro debe mantener fuente, enlace y fecha de revisión. El sitio publica resúmenes propios y no reproduce artículos completos ni materiales de terceros sin autorización.
 
