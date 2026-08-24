@@ -18,6 +18,7 @@ const state = {
   competition: 'all',
   region: 'all',
   footballSearch: '',
+  resultLeague: 'all',
   resultClub: 'all',
   editorial: Object.fromEntries(ARTICLES.map((article) => [article.id, article.status])),
   selectedArticle: null,
@@ -50,11 +51,79 @@ const IDENTITY_COLORS = {
   'Aston Martin': ['#0b6f5e', '#d6e530'], 'Haas F1 Team': ['#e9e9e9', '#d51e2b'], 'Cadillac': ['#15191d', '#d3d8dc'],
 };
 
+const TEAM_WIKI_PAGES = {
+  // Paraguay y nombres abreviados o ambiguos.
+  '2 de Mayo': 'Club 2 de Mayo', 'Cerro Porteño': 'Cerro Porteño', 'Guaraní': 'Club Guaraní',
+  'Libertad': 'Club Libertad', 'Luqueño': 'Sportivo Luqueño', 'Nacional': 'Club Nacional',
+  'Olimpia': 'Club Olimpia', 'Recoleta': 'Deportivo Recoleta', 'Rubio Ñu': 'Club Rubio Ñu',
+  'San Lorenzo': 'Sportivo San Lorenzo', 'Sportivo Ameliano': 'Sportivo Ameliano', 'Trinidense': 'Sportivo Trinidense',
+  // Europa: abreviaturas usadas por la interfaz.
+  'Athletic': 'Athletic Bilbao', 'Atlético': 'Atlético Madrid', 'Barcelona': 'FC Barcelona',
+  'Betis': 'Real Betis', 'Deportivo': 'Deportivo de La Coruña', 'Espanyol': 'RCD Espanyol',
+  'Racing': 'Racing de Santander', 'Rayo': 'Rayo Vallecano', 'Man City': 'Manchester City F.C.',
+  'Man United': 'Manchester United F.C.', 'Nottingham': 'Nottingham Forest F.C.',
+  'Brighton': 'Brighton & Hove Albion F.C.', 'Bournemouth': 'AFC Bournemouth',
+  'Ipswich': 'Ipswich Town F.C.', 'Hull': 'Hull City A.F.C.', 'Leeds': 'Leeds United F.C.',
+  'Newcastle': 'Newcastle United F.C.', 'Marseille': 'Olympique de Marseille', 'Lyon': 'Olympique Lyonnais',
+  'PSG': 'Paris Saint-Germain F.C.', 'Rennes': 'Stade Rennais F.C.', 'Brest': 'Stade Brestois 29',
+  'Nice': 'OGC Nice', 'Monaco': 'AS Monaco FC', 'Le Havre': 'Le Havre AC', 'Troyes': 'ES Troyes AC',
+  'Strasbourg': 'RC Strasbourg Alsace', 'Lens': 'RC Lens', 'Lille': 'Lille OSC', 'Lorient': 'FC Lorient',
+  'N.E.C.': 'NEC Nijmegen', 'Bodø/Glimt': 'FK Bodø/Glimt', 'LASK': 'LASK',
+  'GNK Dinamo': 'GNK Dinamo Zagreb', 'AEK Athens': 'AEK Athens F.C.', 'Celje': 'NK Celje',
+  'Slovan Bratislava': 'ŠK Slovan Bratislava', 'Sabah': 'Sabah FC (Azerbaijan)',
+  'Hapoel Beer-Sheva': 'Hapoel Be\'er Sheva F.C.', 'Viking': 'Viking FK', 'Levski Sofia': 'PFC Levski Sofia',
+  // Parrilla 2026.
+  'Mercedes': 'Mercedes-Benz in Formula One', 'Ferrari': 'Scuderia Ferrari', 'McLaren': 'McLaren',
+  'Red Bull Racing': 'Red Bull Racing', 'Racing Bulls': 'Racing Bulls', 'Alpine': 'Alpine F1 Team',
+  'Haas F1 Team': 'Haas F1 Team', 'Audi': 'Audi in Formula One', 'Williams': 'Williams Racing',
+  'Aston Martin': 'Aston Martin in Formula One', 'Cadillac': 'Cadillac Formula 1 Team',
+};
+
+const logoRequestCache = new Map();
+
+async function resolveTeamLogo(name, kind) {
+  const cacheKey = `${kind}:${name}`;
+  if (logoRequestCache.has(cacheKey)) return logoRequestCache.get(cacheKey);
+  const request = (async () => {
+    let title = TEAM_WIKI_PAGES[name];
+    if (!title) {
+      const query = kind === 'f1' ? `${name} Formula One team` : `${name} association football club`;
+      const searchResponse = await fetch(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=1`);
+      if (!searchResponse.ok) return null;
+      const searchData = await searchResponse.json();
+      title = searchData.pages?.[0]?.key;
+    }
+    if (!title) return null;
+    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+    if (!response.ok) return null;
+    const data = await response.json();
+    const image = data.thumbnail?.source || data.originalimage?.source;
+    if (!image) return null;
+    return { image, page: data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}` };
+  })().catch(() => null);
+  logoRequestCache.set(cacheKey, request);
+  return request;
+}
+
+function hydrateTeamLogos(root = document) {
+  $$('[data-team-logo]:not([data-logo-ready])', root).forEach(async (badge) => {
+    badge.dataset.logoReady = 'loading';
+    const result = await resolveTeamLogo(badge.dataset.teamLogo, badge.dataset.logoKind || 'football');
+    if (!result || !badge.isConnected) { badge.dataset.logoReady = 'fallback'; return; }
+    const image = $('img', badge);
+    image.addEventListener('load', () => badge.classList.add('has-logo'), { once: true });
+    image.src = result.image;
+    badge.closest('a')?.setAttribute('href', result.page);
+    badge.dataset.logoReady = 'true';
+  });
+}
+
 function identityBadge(name, kind = 'football') {
   const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
   const fallbackHue = [...name].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 360;
   const colors = IDENTITY_COLORS[name] || [`hsl(${fallbackHue} 62% 45%)`, kind === 'f1' ? '#ffffff' : '#0a1411'];
-  return `<span class="team-identity ${kind}" style="--identity-primary:${colors[0]};--identity-accent:${colors[1]}" aria-label="Identificador de ${name}"><b>${initials}</b></span>`;
+  const searchUrl = `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(`${name} ${kind === 'f1' ? 'Formula One team' : 'football club'}`)}`;
+  return `<a class="team-logo-link" href="${searchUrl}" target="_blank" rel="noreferrer" title="Ver origen del escudo de ${name}"><span class="team-identity ${kind}" data-team-logo="${name}" data-logo-kind="${kind}" style="--identity-primary:${colors[0]};--identity-accent:${colors[1]}" aria-label="Escudo de ${name}"><img alt="" loading="lazy" decoding="async"><b>${initials}</b></span></a>`;
 }
 
 function newsCard(article) {
@@ -132,14 +201,63 @@ function standingsTable(standing) {
   </table></div><div class="standings-source"><span>Instantánea de demostración · no es tiempo real</span><a class="source-link" href="${standing.url}" target="_blank" rel="noreferrer">Fuente: ${standing.source} ↗</a></div>`;
 }
 
+function resultFootballData() {
+  return FOOTBALL_RESULTS.filter((item) => {
+    const competition = competitionById(item.competition);
+    return (state.resultLeague === 'all' || item.competition === state.resultLeague)
+      && (state.region === 'all' || competition?.region === state.region);
+  });
+}
+
+function renderResultLeagueFilter() {
+  const select = $('#result-league-filter');
+  if (!select) return;
+  const availableIds = new Set(FOOTBALL_RESULTS.map((item) => item.competition));
+  const leagues = COMPETITIONS.filter((item) => availableIds.has(item.id) && (state.region === 'all' || item.region === state.region));
+  if (state.resultLeague !== 'all' && !leagues.some((item) => item.id === state.resultLeague)) state.resultLeague = 'all';
+  select.innerHTML = '<option value="all">Todas las ligas</option>' + leagues.map((item) => `<option value="${item.id}">${item.name}</option>`).join('');
+  select.value = state.resultLeague;
+}
+
 function renderResultClubFilter() {
   const select = $('#result-club-filter');
   if (!select) return;
-  const available = filteredFootballData(FOOTBALL_RESULTS);
+  const available = resultFootballData();
   const clubs = [...new Set(available.flatMap((item) => [item.home, item.away]))].sort((a, b) => a.localeCompare(b, 'es'));
   if (state.resultClub !== 'all' && !clubs.includes(state.resultClub)) state.resultClub = 'all';
   select.innerHTML = '<option value="all">Todos los clubes</option>' + clubs.map((club) => `<option value="${club}">${club}</option>`).join('');
   select.value = state.resultClub;
+}
+
+function roundNumber(round) {
+  return Number(round.match(/\d+/)?.[0] || 999);
+}
+
+function renderMatchday(round, matches) {
+  const dates = [...new Set(matches.map((item) => item.date))];
+  return `<section class="matchday-block">
+    <header class="matchday-heading"><div><span>JORNADA</span><h3>${round}</h3></div><small>${dates.join(' · ')}</small></header>
+    <div class="match-list">${matches.sort((a, b) => a.dateISO.localeCompare(b.dateISO)).map((item, index) => `
+      <article class="match-row">
+        <span class="match-number">PARTIDO ${String(index + 1).padStart(2, '0')}</span>
+        <time datetime="${item.dateISO}">${item.date}</time>
+        <div class="match-team home"><b>${item.home}</b>${identityBadge(item.home)}</div>
+        <strong class="match-score">${item.homeScore}<i>–</i>${item.awayScore}</strong>
+        <div class="match-team away">${identityBadge(item.away)}<b>${item.away}</b></div>
+        <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a>
+      </article>`).join('')}</div>
+  </section>`;
+}
+
+function renderGroupedFootballResults(results) {
+  return COMPETITIONS.filter((competition) => results.some((item) => item.competition === competition.id)).map((competition) => {
+    const leagueMatches = results.filter((item) => item.competition === competition.id);
+    const rounds = [...new Set(leagueMatches.map((item) => item.round))].sort((a, b) => roundNumber(a) - roundNumber(b) || a.localeCompare(b, 'es'));
+    return `<section class="results-league-section" style="--league-color:${competition.color}">
+      <header class="results-league-heading"><div><span>${competition.region}</span><h2>${competition.name}</h2></div><strong>${leagueMatches.length} partidos verificados</strong></header>
+      ${rounds.map((round) => renderMatchday(round, leagueMatches.filter((item) => item.round === round))).join('')}
+    </section>`;
+  }).join('');
 }
 
 function renderFootballStandings() {
@@ -163,24 +281,23 @@ function renderFootball() {
   $('#football-news').innerHTML = articles.length ? articles.map(newsCard).join('') : emptyState('Sin noticias para esta búsqueda', 'La competición sí está disponible, pero no encontramos publicaciones que coincidan con el texto ingresado.');
   renderFootballStandings();
 
+  renderResultLeagueFilter();
   renderResultClubFilter();
-  const results = filteredFootballData(FOOTBALL_RESULTS).filter((item) => state.resultClub === 'all' || item.home === state.resultClub || item.away === state.resultClub);
-  $('#football-results').innerHTML = results.length ? `
-    <table class="data-table">
-      <caption>Resultados por fecha · instantánea revisada el 24 ago 2026</caption>
-      <thead><tr><th>Fecha</th><th>Competición</th><th>Jornada</th><th>Local</th><th>Resultado</th><th>Visitante</th><th>Fuente</th></tr></thead>
-      <tbody>${results.map((item) => `<tr><td>${item.date}</td><td>${competitionById(item.competition)?.name}</td><td>${item.round}</td><td><span class="team-cell">${identityBadge(item.home)}<b>${item.home}</b></span></td><td class="score">${item.homeScore} – ${item.awayScore}</td><td><span class="team-cell">${identityBadge(item.away)}<b>${item.away}</b></span></td><td><a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a></td></tr>`).join('')}</tbody>
-    </table>
-    <p class="data-note">No se completan resultados de otras competiciones hasta conectar una API autorizada. Esto evita presentar marcadores inventados o desactualizados.</p>` : emptyState('Sin resultados verificados', 'La fuente o API autorizada para esta competición todavía no está conectada.');
+  const results = resultFootballData().filter((item) => state.resultClub === 'all' || item.home === state.resultClub || item.away === state.resultClub);
+  $('#football-results').innerHTML = results.length ? `${renderGroupedFootballResults(results)}
+    <p class="data-note">Partidos finalizados y verificados hasta el 24 ago 2026. Bundesliga todavía no aparece porque su temporada comienza el 28 de agosto. Los escudos se consultan desde Wikipedia/Wikimedia y enlazan a su página de origen; las marcas pertenecen a sus titulares.</p>` : emptyState('Sin resultados verificados', 'No hay partidos finalizados que coincidan con la liga y el club seleccionados.');
 
   const upcoming = filteredFootballData(FOOTBALL_UPCOMING);
   $('#football-upcoming').innerHTML = upcoming.length ? `
     <table class="data-table">
       <caption>Agenda informada por la fuente oficial · Horario local sujeto a cambios</caption>
       <thead><tr><th>Fecha</th><th>Competición</th><th>Local</th><th>Hora</th><th>Visitante</th><th>Fuente</th></tr></thead>
-      <tbody>${upcoming.map((item) => `<tr><td>${item.date}</td><td>${competitionById(item.competition)?.name}</td><td>${item.home}</td><td class="score">${item.time}</td><td>${item.away}</td><td><a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a></td></tr>`).join('')}</tbody>
+      <tbody>${upcoming.map((item) => `<tr><td>${item.date}</td><td>${competitionById(item.competition)?.name}</td><td><span class="team-cell">${identityBadge(item.home)}<b>${item.home}</b></span></td><td class="score">${item.time}</td><td><span class="team-cell">${identityBadge(item.away)}<b>${item.away}</b></span></td><td><a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a></td></tr>`).join('')}</tbody>
     </table>
     <p class="data-note">Última revisión: 24 ago 2026 · 14:20. Confirmá siempre el horario definitivo en la fuente original.</p>` : emptyState('Sin próximos partidos verificados', 'La fuente o API autorizada para esta competición todavía no está conectada.');
+  hydrateTeamLogos($('#football-news-panel'));
+  hydrateTeamLogos($('#football-results-panel'));
+  hydrateTeamLogos($('#football-upcoming-panel'));
 }
 
 function rankingRows() {
@@ -203,7 +320,8 @@ function renderF1() {
 
   $('#f1-constructors-panel').innerHTML = `<div class="ranking-layout"><div class="ranking-card"><h2>Clasificación de constructores</h2>${constructorRows()}<div class="ranking-source"><span>11 constructores · revisión 24 ago 2026</span><a href="https://www.formula1.com/en/results/2026/team" target="_blank" rel="noreferrer">Fuente oficial ↗</a></div></div><div class="placeholder-card"><span class="tag">Fuente oficial</span><h2>Tabla completa</h2><p>La clasificación reproduce posiciones y puntos publicados en Formula1.com. La actualización automática futura deberá pasar por revisión editorial.</p></div></div>`;
 
-  $('#f1-profiles-panel').innerHTML = `<div class="profile-grid">${F1_PROFILES.map((profile) => `<article class="profile-card">${identityBadge(profile.team, 'f1')}<span class="profile-code">${profile.code}</span><h3>${profile.team}</h3><p>${profile.drivers}</p><p>Identidad gráfica propia · Sin logotipos oficiales protegidos.</p></article>`).join('')}</div><p class="data-note">Los identificadores visuales permiten reconocer cada equipo sin publicar marcas protegidas. La arquitectura admite sustituirlos por activos oficiales cuando exista una licencia de uso.</p>`;
+  $('#f1-profiles-panel').innerHTML = `<div class="profile-grid">${F1_PROFILES.map((profile) => `<article class="profile-card">${identityBadge(profile.team, 'f1')}<span class="profile-code">${profile.code}</span><h3>${profile.team}</h3><p>${profile.drivers}</p><p>Logotipo de referencia enlazado a su página de origen.</p></article>`).join('')}</div><p class="data-note">Los logotipos se consultan desde Wikipedia/Wikimedia para identificación editorial. Cada imagen enlaza a su origen y las marcas pertenecen a sus respectivos titulares.</p>`;
+  $$('.f1-panel').forEach((panel) => hydrateTeamLogos(panel));
 }
 
 function setRoute(route) {
@@ -296,6 +414,8 @@ function bindEvents() {
     const button = event.target.closest('[data-competition]');
     if (!button) return;
     state.competition = button.dataset.competition;
+    state.resultLeague = state.competition;
+    state.resultClub = 'all';
     $('#competition-filter').value = state.competition;
     $$('.competition-chip').forEach((chip) => chip.classList.toggle('active', chip === button));
     renderFootball();
@@ -303,6 +423,8 @@ function bindEvents() {
 
   $('#competition-filter').addEventListener('change', (event) => {
     state.competition = event.target.value;
+    state.resultLeague = state.competition;
+    state.resultClub = 'all';
     $$('.competition-chip').forEach((chip) => chip.classList.toggle('active', chip.dataset.competition === state.competition));
     renderFootball();
   });
@@ -310,14 +432,23 @@ function bindEvents() {
     state.region = event.target.value;
     const selectedCompetition = competitionById(state.competition);
     if (selectedCompetition && state.region !== 'all' && selectedCompetition.region !== state.region) state.competition = 'all';
+    const selectedResultLeague = competitionById(state.resultLeague);
+    if (selectedResultLeague && state.region !== 'all' && selectedResultLeague.region !== state.region) state.resultLeague = 'all';
+    state.resultClub = 'all';
     renderCompetitionControls();
     renderFootball();
   });
   $('#football-search').addEventListener('input', (event) => { state.footballSearch = event.target.value.trim(); renderFootball(); });
   $('#clear-football-filters').addEventListener('click', () => {
-    state.competition = 'all'; state.region = 'all'; state.footballSearch = ''; state.resultClub = 'all';
+    state.competition = 'all'; state.region = 'all'; state.footballSearch = ''; state.resultLeague = 'all'; state.resultClub = 'all';
     $('#region-filter').value = 'all'; $('#football-search').value = '';
     renderCompetitionControls();
+    renderFootball();
+  });
+
+  $('#result-league-filter').addEventListener('change', (event) => {
+    state.resultLeague = event.target.value;
+    state.resultClub = 'all';
     renderFootball();
   });
 
@@ -330,6 +461,8 @@ function bindEvents() {
     const button = event.target.closest('[data-standing-competition]');
     if (!button) return;
     state.competition = button.dataset.standingCompetition;
+    state.resultLeague = state.competition;
+    state.resultClub = 'all';
     renderCompetitionControls();
     renderFootball();
   });

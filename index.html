@@ -125,7 +125,7 @@
       <section class="section-wrap football-content">
         <div class="content-tabs" role="tablist" aria-label="Contenido de fútbol">
           <button class="active" role="tab" aria-selected="true" data-football-tab="news">Noticias y tabla</button>
-          <button role="tab" aria-selected="false" data-football-tab="results">Resultados recientes</button>
+          <button role="tab" aria-selected="false" data-football-tab="results">Calendario y resultados</button>
           <button role="tab" aria-selected="false" data-football-tab="upcoming">Próximos partidos</button>
         </div>
         <div id="football-news-panel" class="tab-panel">
@@ -134,8 +134,11 @@
         </div>
         <div id="football-results-panel" class="tab-panel" hidden>
           <div class="result-filter-bar">
-            <div><p class="overline">RESULTADOS POR FECHA</p><b>Vista general o por club</b></div>
-            <label><span>Club</span><select id="result-club-filter"><option value="all">Todos los clubes</option></select></label>
+            <div><p class="overline">CALENDARIO POR FECHAS</p><b>Separado por liga y jornada</b></div>
+            <div class="result-filter-fields">
+              <label><span>Liga</span><select id="result-league-filter"><option value="all">Todas las ligas</option></select></label>
+              <label><span>Club</span><select id="result-club-filter"><option value="all">Todos los clubes</option></select></label>
+            </div>
           </div>
           <div class="data-table-wrap" id="football-results"></div>
         </div>
