@@ -337,8 +337,69 @@ export const FOOTBALL_RESULTS = [
 ];
 
 export const FOOTBALL_UPCOMING = [
-  { date: 'Jornada 6', competition: 'paraguay', home: 'Nacional', away: 'Sportivo Luqueño', time: '16:00', source: 'APF', url: 'https://www.apf.org.py/' },
-  { date: 'Jornada 6', competition: 'paraguay', home: 'Libertad', away: 'Sportivo San Lorenzo', time: '18:30', source: 'APF', url: 'https://www.apf.org.py/' },
+  { date: '25 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'Sabah', away: 'Hapoel Beer-Sheva', time: '18:45', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+  { date: '25 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'LASK', away: 'Celtic', time: '21:00', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+  { date: '25 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'Bodø/Glimt', away: 'N.E.C.', time: '21:00', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+  { date: '26 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'AEK Athens', away: 'Levski Sofia', time: '21:00', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+  { date: '26 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'Viking', away: 'GNK Dinamo', time: '21:00', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+  { date: '26 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'Celje', away: 'Slovan Bratislava', time: '21:00', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+  { date: '26 ago 2026', round: 'Play-offs · Vuelta', competition: 'champions', home: 'Lyon', away: 'Fenerbahçe', time: '21:00', zone: 'CET', source: 'UEFA', url: 'https://www.uefa.com/uefachampionsleague/news/02a6-20e5a8be4e63-ae971c582f8c-1000--champions-league-qualifying-fixtures-results-dates-how-it-/' },
+
+  { date: '28 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Lille', away: 'PSG', time: '20:45', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Strasbourg', away: 'Lens', time: '17:15', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Lyon', away: 'Le Havre', time: '20:45', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Lorient', away: 'Troyes', time: '20:45', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Brest', away: 'Toulouse', time: '20:45', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Auxerre', away: 'Angers', time: '20:45', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Paris FC', away: 'Nice', time: '15:00', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Rennes', away: 'Le Mans', time: '17:15', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'ligue1', home: 'Monaco', away: 'Marseille', time: '20:45', zone: 'CEST', source: 'Ligue1.com', url: 'https://ligue1.com/fr/articles/l1_article_5435-programmation-tv-des-2-premieres-journees-de-ligue-1-mcdonald-s-2627' },
+
+  { date: '28 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Racing', away: 'Elche', time: '19:00', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '28 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Alavés', away: 'Villarreal', time: '21:30', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '29 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Levante', away: 'Betis', time: '17:00', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '29 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Real Sociedad', away: 'Espanyol', time: '19:00', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '29 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Sevilla', away: 'Atlético', time: '21:30', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '30 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Real Madrid', away: 'Málaga', time: '17:00', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '30 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Deportivo', away: 'Valencia', time: '19:30', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '30 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Celta', away: 'Athletic', time: '21:30', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '31 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Osasuna', away: 'Getafe', time: '19:30', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+  { date: '31 ago 2026', round: 'Jornada 3', competition: 'laliga', home: 'Barcelona', away: 'Rayo', time: '21:30', zone: 'CEST', source: 'LALIGA', url: 'https://www.laliga.com/es-DE/noticias/horarios-de-la-tercera-jornada-de-laliga-ea-sports-2026-27' },
+
+  { date: '28 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Crystal Palace', away: 'Man City', time: '20:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Liverpool', away: 'Nottingham', time: '12:30', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Bournemouth', away: 'Everton', time: '15:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Coventry', away: 'Hull', time: '15:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '29 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Tottenham', away: 'Newcastle', time: '17:30', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Chelsea', away: 'Brighton', time: '14:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Leeds', away: 'Brentford', time: '14:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Sunderland', away: 'Fulham', time: '14:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '30 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Man United', away: 'Ipswich', time: '16:30', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+  { date: '31 ago 2026', round: 'Jornada 2', competition: 'premier', home: 'Aston Villa', away: 'Arsenal', time: '20:00', zone: 'BST', source: 'Premier League', url: 'https://www.premierleague.com/en/news/4678381' },
+
+  { date: '28 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Bayern München', away: 'Stuttgart', time: '20:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '29 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'RB Leipzig', away: 'Mönchengladbach', time: '15:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '29 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Mainz', away: 'Paderborn', time: '15:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '29 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Union Berlin', away: 'Eintracht Frankfurt', time: '15:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '29 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Köln', away: 'Hoffenheim', time: '15:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '29 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Elversberg', away: 'Leverkusen', time: '15:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '29 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Dortmund', away: 'Hamburg', time: '18:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '30 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Freiburg', away: 'Werder Bremen', time: '15:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+  { date: '30 ago 2026', round: 'Jornada 1', competition: 'bundesliga', home: 'Augsburg', away: 'Schalke', time: '17:30', zone: 'CEST', source: 'Bundesliga', url: 'https://products.bundesliga.com/fixtures' },
+
+  { date: '25 ago 2026', round: 'Jornada 6', competition: 'paraguay', home: '2 de Mayo', away: 'Guaraní', time: '18:30', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+  { date: '28 ago 2026', round: 'Jornada 7', competition: 'paraguay', home: 'Luqueño', away: 'Rubio Ñu', time: '16:00', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+  { date: '28 ago 2026', round: 'Jornada 7', competition: 'paraguay', home: 'San Lorenzo', away: 'Nacional', time: '18:30', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+  { date: '29 ago 2026', round: 'Jornada 7', competition: 'paraguay', home: 'Trinidense', away: '2 de Mayo', time: '16:00', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+  { date: '29 ago 2026', round: 'Jornada 7', competition: 'paraguay', home: 'Recoleta', away: 'Olimpia', time: '18:30', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+  { date: '30 ago 2026', round: 'Jornada 7', competition: 'paraguay', home: 'Cerro Porteño', away: 'Libertad', time: '16:00', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+  { date: '30 ago 2026', round: 'Jornada 7', competition: 'paraguay', home: 'Guaraní', away: 'Sportivo Ameliano', time: '18:30', zone: 'PYT', source: 'ProfeGol / API-Football', url: 'https://profegol.com/calendario/primera-division-paraguay-clausura/' },
+];
+
+export const F1_UPCOMING = [
+  { round: 13, country: 'Italia', race: "Gran Premio de Italia", circuit: 'Monza', dates: '4–6 sep 2026', source: 'Formula1.com', url: 'https://www.formula1.com/en/racing/2026' },
+  { round: 14, country: 'España', race: 'Gran Premio de España', circuit: 'Madring', dates: '11–13 sep 2026', source: 'Formula1.com', url: 'https://www.formula1.com/en/racing/2026' },
+  { round: 15, country: 'Azerbaiyán', race: 'Gran Premio de Azerbaiyán', circuit: 'Bakú', dates: '24–26 sep 2026', source: 'Formula1.com', url: 'https://www.formula1.com/en/racing/2026' },
 ];
 
 // Instantaneas revisadas manualmente para el prototipo. No representan una

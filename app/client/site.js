@@ -4,13 +4,14 @@ import {
   EDITORIAL_STATUSES,
   F1_CONSTRUCTORS,
   F1_DRIVERS,
+  F1_UPCOMING,
   F1_PROFILES,
   F1_RACE_RESULTS,
   FOOTBALL_RESULTS,
   FOOTBALL_STANDINGS,
   FOOTBALL_UPCOMING,
   LEGAL_COPY,
-} from './data.js';
+} from '../data/index.js';
 
 const state = {
   route: 'home',
@@ -371,13 +372,15 @@ function renderFootball() {
     <p class="data-note">Partidos finalizados y verificados hasta el 24 ago 2026. Bundesliga todavía no aparece porque su temporada comienza el 28 de agosto. Los escudos se consultan desde Wikipedia/Wikimedia y enlazan a su página de origen; las marcas pertenecen a sus titulares.</p>` : emptyState('Sin resultados verificados', 'No hay partidos finalizados que coincidan con la liga y el club seleccionados.');
 
   const upcoming = filteredFootballData(FOOTBALL_UPCOMING);
+  const upcomingTitle = state.competition === 'all' ? 'Agenda de todas las competiciones' : `Próximos partidos · ${competitionById(state.competition)?.name}`;
   $('#football-upcoming').innerHTML = upcoming.length ? `
+    <div class="upcoming-heading"><div><p class="overline">AGENDA VERIFICADA</p><h2>${upcomingTitle}</h2></div><span>${upcoming.length} eventos programados</span></div>
     <table class="data-table">
-      <caption>Agenda informada por la fuente oficial · Horario local sujeto a cambios</caption>
-      <thead><tr><th>Fecha</th><th>Competición</th><th>Local</th><th>Hora</th><th>Visitante</th><th>Fuente</th></tr></thead>
-      <tbody>${upcoming.map((item) => `<tr><td>${item.date}</td><td>${competitionById(item.competition)?.name}</td><td><span class="team-cell">${identityBadge(item.home)}<b>${item.home}</b></span></td><td class="score">${item.time}</td><td><span class="team-cell">${identityBadge(item.away)}<b>${item.away}</b></span></td><td><a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a></td></tr>`).join('')}</tbody>
+      <caption>Partidos próximos · horarios locales de cada competición y sujetos a cambios</caption>
+      <thead><tr><th>Fecha</th><th>Jornada</th><th>Competición</th><th>Local</th><th>Hora</th><th>Visitante</th><th>Estado</th><th>Fuente</th></tr></thead>
+      <tbody>${upcoming.map((item) => `<tr><td>${item.date}</td><td>${item.round}</td><td>${competitionById(item.competition)?.name}</td><td><span class="team-cell">${identityBadge(item.home)}<b>${item.home}</b></span></td><td class="score">${item.time}<small>${item.zone}</small></td><td><span class="team-cell">${identityBadge(item.away)}<b>${item.away}</b></span></td><td><span class="event-status">Próximo</span></td><td><a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a></td></tr>`).join('')}</tbody>
     </table>
-    <p class="data-note">Última revisión: 24 ago 2026 · 14:20. Confirmá siempre el horario definitivo en la fuente original.</p>` : emptyState('Sin próximos partidos verificados', 'La fuente o API autorizada para esta competición todavía no está conectada.');
+    <p class="data-note">Última revisión editorial: 24 ago 2026. El estado “En vivo” solo se habilitará cuando exista una conexión autorizada que confirme el inicio del evento. Confirmá siempre el horario definitivo en la fuente original.</p>` : emptyState('Sin próximos partidos verificados', 'La fuente o API autorizada para esta competición todavía no está conectada.');
   hydrateTeamLogos($('#football-news-panel'));
   hydrateTeamLogos($('#football-results-panel'));
   hydrateTeamLogos($('#football-upcoming-panel'));
@@ -396,7 +399,8 @@ function renderF1() {
   const articles = ARTICLES.filter((article) => article.sport === 'f1').sort(byNewest);
   $('#f1-news').innerHTML = articles.map(newsCard).join('');
 
-  $('#f1-calendar-panel').innerHTML = `<div class="placeholder-card"><span class="tag">API autorizada pendiente</span><h2>Calendario de Grandes Premios</h2><p>No mostramos fechas de demostración como si fueran reales. La versión de producción consumirá el calendario desde un proveedor autorizado, guardará la última sincronización y enviará los cambios a revisión editorial.</p><a class="source-link" href="https://www.formula1.com/en/racing/2026" target="_blank" rel="noreferrer">Consultar calendario oficial ↗</a></div>`;
+  const nextRace = F1_UPCOMING[0];
+  $('#f1-calendar-panel').innerHTML = `<section class="f1-schedule"><div class="next-race-card"><div><span class="tag">PRÓXIMA CARRERA · RONDA ${nextRace.round}</span><h2>${nextRace.race}</h2><p>${nextRace.circuit} · ${nextRace.dates}</p></div><strong>${nextRace.country}</strong><a class="source-link" href="${nextRace.url}" target="_blank" rel="noreferrer">${nextRace.source} ↗</a></div><div class="data-table-wrap"><table class="data-table"><caption>Próximos Grandes Premios · calendario oficial 2026</caption><thead><tr><th>Ronda</th><th>Gran Premio</th><th>Circuito</th><th>Fechas</th><th>Estado</th><th>Fuente</th></tr></thead><tbody>${F1_UPCOMING.map((event) => `<tr><td class="position">${event.round}</td><td><b>${event.race}</b><small>${event.country}</small></td><td>${event.circuit}</td><td>${event.dates}</td><td><span class="event-status f1-event">Próximo</span></td><td><a class="source-link" href="${event.url}" target="_blank" rel="noreferrer">${event.source} ↗</a></td></tr>`).join('')}</tbody></table></div><p class="data-note">Última revisión editorial: 24 ago 2026. Formula1.com identifica Italia como la próxima carrera. Los horarios detallados de sesiones deben confirmarse en la fuente oficial.</p></section>`;
 
   $('#f1-race-panel').innerHTML = `<div class="standings-heading f1-heading"><div><p class="overline">RESULTADO COMPLETO</p><h2>${F1_RACE_RESULTS.race}</h2></div><span>${F1_RACE_RESULTS.date}</span></div><div class="data-table-wrap"><table class="data-table f1-results"><caption>Resultado oficial · revisión ${F1_RACE_RESULTS.updated}</caption><thead><tr><th>Pos.</th><th>Piloto</th><th>Equipo</th><th>Vueltas</th><th>Tiempo / Estado</th><th>Pts.</th></tr></thead><tbody>${F1_RACE_RESULTS.rows.map((row) => `<tr><td class="position">${row.pos}</td><td><b>${row.driver}</b><small>${row.code}</small></td><td><span class="team-cell">${identityBadge(row.team, 'f1')}<b>${row.team}</b></span></td><td>${row.laps}</td><td>${row.result}</td><td class="f1-points">${row.points}</td></tr>`).join('')}</tbody></table></div><div class="standings-source"><span>Resultado oficial de la carrera</span><a class="source-link" href="${F1_RACE_RESULTS.url}" target="_blank" rel="noreferrer">${F1_RACE_RESULTS.source} ↗</a></div>`;
 

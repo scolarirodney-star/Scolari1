@@ -37,4 +37,6 @@ next-env.d.ts
 /outputs/
 /work/
 /.pnpm-store/
+/.artifacts/
+/.codex-remote-attachments/
 *.tsbuildinfo

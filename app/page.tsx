@@ -39,7 +39,7 @@ const PROTOTYPE_HTML = String.raw`
 
 export default function Home() {
   useEffect(() => {
-    void import('./site.js');
+    void import('./client/site.js');
   }, []);
 
   return <div dangerouslySetInnerHTML={{ __html: PROTOTYPE_HTML }} />;

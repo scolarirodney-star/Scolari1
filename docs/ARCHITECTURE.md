@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-La interfaz funcional se ejecuta como una aplicación estática con datos estructurados en `app/data.js`. Los filtros, las vistas y el panel editorial son interactivos, pero las mutaciones del panel duran únicamente durante la sesión de demostración.
+La interfaz funcional se ejecuta como una aplicación estática con datos estructurados en `app/data/index.js`. La lógica del navegador vive en `app/client/site.js` y los estilos globales en `app/styles/globals.css`. Los filtros, las vistas y el panel editorial son interactivos, pero las mutaciones del panel duran únicamente durante la sesión de demostración.
 
 Los datos públicos del prototipo se limitan a registros revisados en las fuentes oficiales indicadas. Cuando no hay información verificada o una API autorizada, la interfaz muestra un estado vacío en lugar de completar datos ficticios.
 
