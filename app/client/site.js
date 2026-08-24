@@ -33,8 +33,20 @@ const state = {
 
 const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
-const competitionById = (id) => COMPETITIONS.find((item) => item.id === id);
+const competitionIndex = new Map(COMPETITIONS.map((competition) => [competition.id, competition]));
+const competitionById = (id) => competitionIndex.get(id);
 const byNewest = (a, b) => b.publishedISO.localeCompare(a.publishedISO);
+const articlesByNewest = [...ARTICLES].sort(byNewest);
+const articlesBySport = Object.fromEntries(SPORT_ROUTES.map((route) => [route, articlesByNewest.filter((article) => article.sport === route)]));
+const initializedRoutes = new Set();
+
+function debounce(callback, wait = 140) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => callback(...args), wait);
+  };
+}
 const PERSON_WIKI_TITLES = {
   'Rodri': 'Rodri (footballer, born 1996)', 'Vitinha': 'Vitinha (footballer, born February 2000)',
   'Luis Díaz': 'Luis Díaz (footballer, born 1997)', 'Derlis González': 'Derlis González',
@@ -98,14 +110,14 @@ async function renderPlayerSpotlight(target, pool, type = 'football') {
 }
 
 function refreshPlayerSpotlights() {
-  SPORT_ROUTES.forEach((route) => {
-    const sport = sportConfig(route);
-    const featuredKey = route === 'football' ? state.competition : sport.featuredKey;
-    renderPlayerSpotlight(sport.spotlightTarget, featuredPool(featuredKey), route);
-  });
+  if (document.hidden || !SPORT_ROUTES.includes(state.route)) return;
+  const sport = sportConfig(state.route);
+  const featuredKey = state.route === 'football' ? state.competition : sport.featuredKey;
+  renderPlayerSpotlight(sport.spotlightTarget, featuredPool(featuredKey), state.route);
 }
 
 setInterval(() => {
+  if (document.hidden || !SPORT_ROUTES.includes(state.route)) return;
   spotlightStep += 1;
   refreshPlayerSpotlights();
 }, 30000);
@@ -173,16 +185,31 @@ async function resolveTeamLogo(name, kind) {
   return request;
 }
 
+async function loadTeamLogo(badge) {
+  if (!badge.isConnected || badge.dataset.logoReady === 'loading' || badge.dataset.logoReady === 'true') return;
+  badge.dataset.logoReady = 'loading';
+  const result = await resolveTeamLogo(badge.dataset.teamLogo, badge.dataset.logoKind || 'football');
+  if (!result || !badge.isConnected) { badge.dataset.logoReady = 'fallback'; return; }
+  const image = $('img', badge);
+  image.addEventListener('load', () => badge.classList.add('has-logo'), { once: true });
+  image.src = result.image;
+  badge.closest('a')?.setAttribute('href', result.page);
+  badge.dataset.logoReady = 'true';
+}
+
+const logoObserver = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries, observer) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    observer.unobserve(entry.target);
+    loadTeamLogo(entry.target);
+  });
+}, { rootMargin: '320px 0px' });
+
 function hydrateTeamLogos(root = document) {
-  $$('[data-team-logo]:not([data-logo-ready])', root).forEach(async (badge) => {
-    badge.dataset.logoReady = 'loading';
-    const result = await resolveTeamLogo(badge.dataset.teamLogo, badge.dataset.logoKind || 'football');
-    if (!result || !badge.isConnected) { badge.dataset.logoReady = 'fallback'; return; }
-    const image = $('img', badge);
-    image.addEventListener('load', () => badge.classList.add('has-logo'), { once: true });
-    image.src = result.image;
-    badge.closest('a')?.setAttribute('href', result.page);
-    badge.dataset.logoReady = 'true';
+  $$('[data-team-logo]:not([data-logo-ready])', root).forEach((badge) => {
+    badge.dataset.logoReady = 'queued';
+    if (logoObserver) logoObserver.observe(badge);
+    else loadTeamLogo(badge);
   });
 }
 
@@ -226,7 +253,7 @@ function emptyState(title, detail) {
 }
 
 function renderHomeNews() {
-  const items = ARTICLES.filter((article) => state.homeFilter === 'all' || article.sport === state.homeFilter).sort(byNewest).slice(0, 4);
+  const items = articlesByNewest.filter((article) => state.homeFilter === 'all' || article.sport === state.homeFilter).slice(0, 4);
   $('#home-news').innerHTML = items.length ? items.map(newsCard).join('') : emptyState('Sin noticias', 'No hay publicaciones para este filtro.');
 }
 
@@ -241,14 +268,13 @@ function renderCompetitionControls() {
 }
 
 function footballArticles() {
-  return ARTICLES.filter((article) => {
-    if (article.sport !== 'football') return false;
+  return articlesBySport.football.filter((article) => {
     const competition = competitionById(article.competition);
     const query = `${article.title} ${article.summary} ${article.source} ${competition?.name || ''}`.toLowerCase();
     return (state.competition === 'all' || article.competition === state.competition)
       && (state.region === 'all' || competition?.region === state.region)
       && (!state.footballSearch || query.includes(state.footballSearch.toLowerCase()));
-  }).sort(byNewest);
+  });
 }
 
 function filteredFootballData(items) {
@@ -393,10 +419,8 @@ function renderFootball() {
       <tbody>${upcoming.map((item) => `<tr><td>${item.date}</td><td>${item.round}</td><td>${competitionById(item.competition)?.name}</td><td><span class="team-cell">${identityBadge(item.home)}<b>${item.home}</b></span></td><td class="score">${item.time}<small>${item.zone}</small></td><td><span class="team-cell">${identityBadge(item.away)}<b>${item.away}</b></span></td><td><span class="event-status">Próximo</span></td><td><a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.source} ↗</a></td></tr>`).join('')}</tbody>
     </table>
     <p class="data-note">Última revisión editorial: 24 ago 2026. El estado “En vivo” solo se habilitará cuando exista una conexión autorizada que confirme el inicio del evento. Confirmá siempre el horario definitivo en la fuente original.</p>` : emptyState('Sin próximos partidos verificados', 'La fuente o API autorizada para esta competición todavía no está conectada.');
-  hydrateTeamLogos($('#football-news-panel'));
-  hydrateTeamLogos($('#football-standings-panel'));
-  hydrateTeamLogos($('#football-results-panel'));
-  hydrateTeamLogos($('#football-upcoming-panel'));
+  const visiblePanel = $$('.tab-panel', $('[data-view="football"]')).find((panel) => !panel.hidden);
+  if (visiblePanel) hydrateTeamLogos(visiblePanel);
 }
 
 function rankingRows() {
@@ -410,7 +434,7 @@ function constructorRows() {
 function renderF1() {
   renderPlayerSpotlight('#f1-player-spotlight', featuredPool('formula1'), 'f1');
   renderF1EventStrip();
-  const articles = ARTICLES.filter((article) => article.sport === 'f1').sort(byNewest);
+  const articles = articlesBySport.f1;
   $('#f1-news').innerHTML = articles.map(newsCard).join('');
 
   const nextRace = F1_UPCOMING[0];
@@ -423,7 +447,7 @@ function renderF1() {
   $('#f1-constructors-panel').innerHTML = `<div class="ranking-layout"><div class="ranking-card"><h2>Clasificación de constructores</h2>${constructorRows()}<div class="ranking-source"><span>11 constructores · revisión 24 ago 2026</span><a href="https://www.formula1.com/en/results/2026/team" target="_blank" rel="noreferrer">Fuente oficial ↗</a></div></div><div class="placeholder-card"><span class="tag">Fuente oficial</span><h2>Tabla completa</h2><p>La clasificación reproduce posiciones y puntos publicados en Formula1.com. La actualización automática futura deberá pasar por revisión editorial.</p></div></div>`;
 
   $('#f1-profiles-panel').innerHTML = `<div class="profile-grid">${F1_PROFILES.map((profile) => `<article class="profile-card">${identityBadge(profile.team, 'f1')}<span class="profile-code">${profile.code}</span><h3>${profile.team}</h3><p>${profile.drivers}</p><p>Logotipo de referencia enlazado a su página de origen.</p></article>`).join('')}</div><p class="data-note">Los logotipos se consultan desde Wikipedia/Wikimedia para identificación editorial. Cada imagen enlaza a su origen y las marcas pertenecen a sus respectivos titulares.</p>`;
-  $$('.f1-panel').forEach((panel) => hydrateTeamLogos(panel));
+  hydrateTeamLogos($('#f1-news-panel'));
 }
 
 function renderNBAEventStrip() {
@@ -444,7 +468,7 @@ function nbaStandingsTable(conference, rows) {
 function renderNBA() {
   renderPlayerSpotlight('#nba-player-spotlight', featuredPool('nba'), 'nba');
   renderNBAEventStrip();
-  const articles = ARTICLES.filter((article) => article.sport === 'nba').sort(byNewest);
+  const articles = articlesBySport.nba;
   $('#nba-news').innerHTML = articles.map(newsCard).join('');
 
   $('#nba-upcoming-panel').innerHTML = `<div class="standings-heading nba-heading"><div><p class="overline">OPENING NIGHT</p><h2>Próximos partidos</h2></div><span>Horarios publicados en ET</span></div><div class="nba-game-grid">${NBA_UPCOMING.map((event) => `<article class="nba-game-card"><header><span>${event.phase}</span><time>${event.date} · ${event.time} ${event.zone}</time></header><div>${identityBadge(event.away, 'nba')}<b>${event.away}</b><strong>@</strong><b>${event.home}</b>${identityBadge(event.home, 'nba')}</div><a class="source-link" href="${event.url}" target="_blank" rel="noreferrer">Confirmar en ${event.source} ↗</a></article>`).join('')}</div><p class="data-note">La fase regular 2026/27 comienza el 20 de octubre. Los horarios están sujetos a cambios y deben verificarse en NBA.com.</p>`;
@@ -454,14 +478,23 @@ function renderNBA() {
   $('#nba-east-panel').innerHTML = nbaStandingsTable('Este', NBA_STANDINGS.east);
   $('#nba-west-panel').innerHTML = nbaStandingsTable('Oeste', NBA_STANDINGS.west);
   $('#nba-teams-panel').innerHTML = `<div class="standings-heading nba-heading"><div><p class="overline">FRANQUICIAS</p><h2>Los 30 equipos</h2></div><span>Organizados por conferencia</span></div><div class="nba-team-grid">${NBA_TEAMS.map((team) => `<article class="nba-team-card">${identityBadge(team.name, 'nba')}<div><b>${team.name}</b><small>Conferencia ${team.conference}</small></div></article>`).join('')}</div><p class="data-note">Los emblemas se consultan desde Wikipedia/Wikimedia para identificación editorial y enlazan a su página de origen. Las marcas pertenecen a sus titulares.</p>`;
-  $$('.nba-panel').forEach((panel) => hydrateTeamLogos(panel));
+  hydrateTeamLogos($('#nba-news-panel'));
 }
 
 const SPORT_RENDERERS = {
-  football: renderFootball,
+  football: () => {
+    renderCompetitionControls();
+    renderFootball();
+  },
   f1: renderF1,
   nba: renderNBA,
 };
+
+function renderSportOnce(route) {
+  if (initializedRoutes.has(route)) return;
+  SPORT_RENDERERS[route]?.();
+  initializedRoutes.add(route);
+}
 
 function setRoute(route) {
   state.route = route;
@@ -477,9 +510,8 @@ function setRoute(route) {
   });
   $('#mobile-nav').hidden = true;
   $('#menu-button').setAttribute('aria-expanded', 'false');
-  SPORT_RENDERERS[route]?.();
+  renderSportOnce(route);
   if (route === 'admin') renderAdmin();
-  refreshPlayerSpotlights();
   window.scrollTo({ top: 0, behavior: 'smooth' });
   history.replaceState(null, '', route === 'home' ? '#inicio' : `#${route}`);
 }
@@ -519,6 +551,8 @@ function renderReviewDetail(id) {
   save.addEventListener('click', () => {
     const newStatus = $('#editorial-status').value;
     state.editorial[id] = newStatus;
+    initializedRoutes.delete(article.sport);
+    renderHomeNews();
     state.log.unshift({ title: article.title, action: `revisión registrada · ${newStatus}`, time: new Date().toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit' }) });
     renderAdmin();
   });
@@ -537,7 +571,9 @@ function bindSportTabs(sport) {
   $$(`[${attribute}]`).forEach((button) => button.addEventListener('click', () => {
     $$(`[${attribute}]`).forEach((item) => item.classList.toggle('active', item === button));
     const tab = button.dataset[`${sport}Tab`];
-    $$(`.${sport}-panel`).forEach((panel) => { panel.hidden = panel.id !== `${sport}-${tab}-panel`; });
+    const targetId = `${sport}-${tab}-panel`;
+    $$(`.${sport}-panel`).forEach((panel) => { panel.hidden = panel.id !== targetId; });
+    hydrateTeamLogos($(`#${targetId}`));
   }));
 }
 
@@ -594,7 +630,10 @@ function bindEvents() {
     renderCompetitionControls();
     renderFootball();
   });
-  $('#football-search').addEventListener('input', (event) => { state.footballSearch = event.target.value.trim(); renderFootball(); });
+  $('#football-search').addEventListener('input', debounce((event) => {
+    state.footballSearch = event.target.value.trim();
+    renderFootball();
+  }));
   $('#clear-football-filters').addEventListener('click', () => {
     state.competition = 'all'; state.region = 'all'; state.footballSearch = ''; state.resultLeague = 'all'; state.resultClub = 'all';
     $('#region-filter').value = 'all'; $('#football-search').value = '';
@@ -625,7 +664,9 @@ function bindEvents() {
 
   $$('[data-football-tab]').forEach((button) => button.addEventListener('click', () => {
     $$('[data-football-tab]').forEach((item) => { item.classList.toggle('active', item === button); item.setAttribute('aria-selected', String(item === button)); });
-    $$('.tab-panel').forEach((panel) => { panel.hidden = panel.id !== `football-${button.dataset.footballTab}-panel`; });
+    const targetId = `football-${button.dataset.footballTab}-panel`;
+    $$('.tab-panel').forEach((panel) => { panel.hidden = panel.id !== targetId; });
+    hydrateTeamLogos($(`#${targetId}`));
   }));
 
   bindSportTabs('f1');
@@ -634,12 +675,12 @@ function bindEvents() {
   const overlay = $('#search-overlay');
   $('#open-search').addEventListener('click', () => { overlay.hidden = false; $('#global-search').focus(); });
   $('.search-close').addEventListener('click', () => { overlay.hidden = true; });
-  $('#global-search').addEventListener('input', (event) => {
+  $('#global-search').addEventListener('input', debounce((event) => {
     const query = event.target.value.trim();
     const results = globalResults(query);
     $('#search-count').textContent = query.length < 2 ? 'Escribí al menos dos caracteres.' : `${results.length} resultado${results.length === 1 ? '' : 's'}`;
     $('#search-results').innerHTML = results.map((item) => `<a class="search-result" href="${item.url}" target="_blank" rel="noreferrer"><b>${item.title}</b><span>${item.detail} ↗</span></a>`).join('');
-  });
+  }));
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') { overlay.hidden = true; if ($('#legal-dialog').open) $('#legal-dialog').close(); }
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); overlay.hidden = false; $('#global-search').focus(); }
@@ -655,10 +696,7 @@ function bindEvents() {
 }
 
 function init() {
-  renderCompetitionControls();
   renderHomeNews();
-  renderFootball();
-  renderF1();
   bindEvents();
   const initialRoute = location.hash.replace('#', '');
   if ([...SPORT_ROUTES, 'admin'].includes(initialRoute)) setRoute(initialRoute);

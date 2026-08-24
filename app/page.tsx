@@ -1,7 +1,5 @@
-'use client';
-
-import { useEffect } from 'react';
 import { SPORTS } from './config/sports.js';
+import { SiteInitializer } from './client/initializer';
 import { HOME_VIEW } from './views/home';
 import { FOOTBALL_VIEW } from './views/football';
 import { FORMULA1_VIEW } from './views/formula1';
@@ -33,9 +31,10 @@ const PROTOTYPE_HTML = String.raw`
 `;
 
 export default function Home() {
-  useEffect(() => {
-    void import('./client/site.js');
-  }, []);
-
-  return <div dangerouslySetInnerHTML={{ __html: PROTOTYPE_HTML }} />;
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{ __html: PROTOTYPE_HTML }} />
+      <SiteInitializer />
+    </>
+  );
 }
