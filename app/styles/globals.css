@@ -207,8 +207,11 @@ a { color: inherit; text-decoration: none; }
 .race-strip-title b { display: block; overflow: hidden; font-size: 12px; line-height: 1.12; text-overflow: ellipsis; white-space: nowrap; }
 .race-strip-circuit { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 7px; text-transform: uppercase; }
 .race-strip-circuit strong { color: var(--text); font-size: 8px; }
-.competition-chip { flex: 0 0 auto; min-width: 164px; padding: 15px; display: grid; grid-template-columns: 12px 1fr; gap: 10px; border: 1px solid var(--line); border-radius: 11px; background: transparent; text-align: left; cursor: pointer; }
+.competition-chip { flex: 0 0 auto; min-width: 184px; padding: 12px 15px; display: grid; grid-template-columns: 42px 1fr; gap: 12px; align-items: center; border: 1px solid var(--line); border-radius: 11px; background: transparent; text-align: left; cursor: pointer; }
+.competition-chip.all-competitions { min-width: 164px; grid-template-columns: 12px 1fr; }
 .competition-chip i { width: 8px; height: 8px; margin-top: 3px; background: var(--chip-color); border-radius: 50%; box-shadow: 0 0 12px var(--chip-color); }
+.competition-logo { width: 42px; height: 42px; padding: 6px; display: grid; place-items: center; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.18); border-radius: 9px; }
+.competition-logo img { width: 100%; height: 100%; object-fit: contain; }
 .competition-chip b { display: block; font-size: 11px; }.competition-chip small { color: var(--muted); font-size: 8px; }
 .competition-chip.active { background: var(--surface-3); border-color: var(--chip-color); }
 .football-content { padding-top: 42px; }

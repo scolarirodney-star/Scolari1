@@ -1,10 +1,10 @@
 export const COMPETITIONS = [
-  { id: 'champions', name: 'UEFA Champions League', short: 'UCL', region: 'Europa', color: '#7c8cff', source: 'UEFA', url: 'https://es.uefa.com/uefachampionsleague/' },
-  { id: 'ligue1', name: 'Ligue 1', short: 'L1', region: 'Europa', color: '#d3ff3f', source: 'Ligue 1', url: 'https://ligue1.com/' },
-  { id: 'laliga', name: 'LaLiga', short: 'LL', region: 'Europa', color: '#ff6f5e', source: 'LALIGA', url: 'https://www.laliga.com/' },
-  { id: 'premier', name: 'Premier League', short: 'PL', region: 'Europa', color: '#b675ff', source: 'Premier League', url: 'https://www.premierleague.com/' },
-  { id: 'bundesliga', name: 'Bundesliga', short: 'BL', region: 'Europa', color: '#f34b52', source: 'Bundesliga', url: 'https://www.bundesliga.com/' },
-  { id: 'paraguay', name: 'Primera División de Paraguay', short: 'APF', region: 'Sudamérica', color: '#2ee6a6', source: 'APF', url: 'https://www.apf.org.py/' },
+  { id: 'champions', name: 'UEFA Champions League', short: 'UCL', region: 'Europa', color: '#7c8cff', logo: '/assets/competitions/champions.svg', source: 'UEFA', url: 'https://es.uefa.com/uefachampionsleague/' },
+  { id: 'ligue1', name: 'Ligue 1', short: 'L1', region: 'Europa', color: '#d3ff3f', logo: '/assets/competitions/ligue1.svg', source: 'Ligue 1', url: 'https://ligue1.com/' },
+  { id: 'laliga', name: 'LaLiga', short: 'LL', region: 'Europa', color: '#ff6f5e', logo: '/assets/competitions/laliga.svg', source: 'LALIGA', url: 'https://www.laliga.com/' },
+  { id: 'premier', name: 'Premier League', short: 'PL', region: 'Europa', color: '#b675ff', logo: '/assets/competitions/premier.svg', source: 'Premier League', url: 'https://www.premierleague.com/' },
+  { id: 'bundesliga', name: 'Bundesliga', short: 'BL', region: 'Europa', color: '#f34b52', logo: '/assets/competitions/bundesliga.svg', source: 'Bundesliga', url: 'https://www.bundesliga.com/' },
+  { id: 'paraguay', name: 'Primera División de Paraguay', short: 'APF', region: 'Sudamérica', color: '#2ee6a6', logo: '/assets/competitions/paraguay.svg', source: 'APF', url: 'https://www.apf.org.py/' },
 ];
 
 export const ARTICLES = [

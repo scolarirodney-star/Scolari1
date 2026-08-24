@@ -249,8 +249,8 @@ function renderCompetitionControls() {
   select.innerHTML = '<option value="all">Todas las competiciones</option>' + visibleCompetitions.map((item) => `<option value="${item.id}">${item.name}</option>`).join('');
   select.value = state.competition;
   $('#competition-rail').innerHTML = `
-    <button class="competition-chip ${state.competition === 'all' ? 'active' : ''}" data-competition="all" style="--chip-color:#2ee6a6"><i></i><span><b>Todas</b><small>${state.region === 'all' ? 'Europa + Sudamérica' : state.region}</small></span></button>
-    ${visibleCompetitions.map((item) => `<button class="competition-chip ${state.competition === item.id ? 'active' : ''}" data-competition="${item.id}" style="--chip-color:${item.color}"><i></i><span><b>${item.name}</b><small>${item.region}</small></span></button>`).join('')}`;
+    <button class="competition-chip all-competitions ${state.competition === 'all' ? 'active' : ''}" data-competition="all" style="--chip-color:#2ee6a6"><i></i><span><b>Todas</b><small>${state.region === 'all' ? 'Europa + Sudamérica' : state.region}</small></span></button>
+    ${visibleCompetitions.map((item) => `<button class="competition-chip ${state.competition === item.id ? 'active' : ''}" data-competition="${item.id}" style="--chip-color:${item.color}"><span class="competition-logo"><img src="${item.logo}" alt="Emblema de ${item.name}" loading="lazy" decoding="async"></span><span><b>${item.name}</b><small>${item.region}</small></span></button>`).join('')}`;
 }
 
 function footballArticles() {
