@@ -2,7 +2,17 @@
 
 ## Estado actual
 
-La interfaz funcional se ejecuta como una aplicación estática con datos estructurados en `app/data/index.js`. La lógica del navegador vive en `app/client/site.js` y los estilos globales en `app/styles/globals.css`. Los filtros, las vistas y el panel editorial son interactivos, pero las mutaciones del panel duran únicamente durante la sesión de demostración.
+La interfaz funcional se ejecuta como una aplicación estática organizada por responsabilidades:
+
+- `app/config/sports.js`: registro central de deportes, nombres, colores, imágenes y contenido de portada.
+- `app/views/`: una vista independiente por deporte y otra para la portada.
+- `app/data/index.js`: catálogo único de datos demostrativos y sus fuentes.
+- `app/client/site.js`: renderizadores, navegación e interacciones del navegador.
+- `app/styles/globals.css`: sistema visual compartido y variantes por deporte.
+
+La navegación, los filtros de portada, los protagonistas rotativos y los colores editoriales toman su información del registro central. Agregar o retirar un deporte ya no exige repetir esa configuración en varios lugares.
+
+Los filtros, las vistas y el panel editorial son interactivos, pero las mutaciones del panel duran únicamente durante la sesión de demostración.
 
 Los datos públicos del prototipo se limitan a registros revisados en las fuentes oficiales indicadas. Cuando no hay información verificada o una API autorizada, la interfaz muestra un estado vacío en lugar de completar datos ficticios.
 
@@ -32,3 +42,7 @@ Para tablas, calendarios y resultados se priorizan organismos y competiciones of
 ## Límites del prototipo
 
 No incluye autenticación, conectores de resultados ni persistencia real porque todavía no se seleccionaron proveedores ni credenciales. Esas decisiones deben tomarse antes de exponer el panel administrativo en producción.
+
+## Modificar deportes
+
+La guía operativa para agregar, editar o retirar una sección está en `docs/SPORTS_MODULES.md`.

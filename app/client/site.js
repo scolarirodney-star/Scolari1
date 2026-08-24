@@ -16,6 +16,7 @@ import {
   NBA_TEAMS,
   NBA_UPCOMING,
 } from '../data/index.js';
+import { FEATURED_PEOPLE, SPORTS, SPORT_ROUTES, sportConfig, sportName } from '../config/sports.js';
 
 const state = {
   route: 'home',
@@ -34,38 +35,6 @@ const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 const competitionById = (id) => COMPETITIONS.find((item) => item.id === id);
 const byNewest = (a, b) => b.publishedISO.localeCompare(a.publishedISO);
-const MEDIA = {
-  football: {
-    url: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Well_lit_soccer_stadium_%28Unsplash%29.jpg',
-    alt: 'Estadio de fútbol iluminado durante la noche',
-    credit: 'Imagen ilustrativa · Mario Klassen · CC0',
-    source: 'https://commons.wikimedia.org/wiki/File:Well_lit_soccer_stadium_(Unsplash).jpg',
-  },
-  f1: {
-    url: 'https://images.pexels.com/photos/11211273/pexels-photo-11211273.jpeg?auto=compress&dpr=1&h=750&w=1260',
-    alt: 'Monoplaza de competición en un circuito',
-    credit: 'Imagen ilustrativa · PRAT clement · Pexels',
-    source: 'https://www.pexels.com/photo/a-formula-1-car-on-a-race-track-11211273/',
-  },
-  nba: {
-    url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/The-Yum-Center.jpg?width=1200',
-    alt: 'Arena cubierta configurada para un partido de básquetbol',
-    credit: 'Imagen ilustrativa · Acdixon · CC0',
-    source: 'https://commons.wikimedia.org/wiki/File:The-Yum-Center.jpg',
-  },
-};
-
-const FEATURED_PEOPLE = {
-  laliga: ['Kylian Mbappé', 'Lamine Yamal', 'Vinícius Júnior', 'Jude Bellingham', 'Rodri'],
-  ligue1: ['Ousmane Dembélé', 'Khvicha Kvaratskhelia', 'Vitinha', 'João Neves', 'Achraf Hakimi'],
-  bundesliga: ['Harry Kane', 'Michael Olise', 'Luis Díaz', 'Joshua Kimmich', 'Jamal Musiala'],
-  champions: ['Kylian Mbappé', 'Lamine Yamal', 'Erling Haaland', 'Ousmane Dembélé', 'Jude Bellingham'],
-  paraguay: ['Roque Santa Cruz', 'Derlis González', 'Óscar Cardozo', 'Lorenzo Melgarejo', 'Sebastián Ferreira'],
-  premier: ['Erling Haaland', 'Bruno Fernandes', 'Gabriel Magalhães', 'João Pedro', 'Cole Palmer'],
-  formula1: ['George Russell', 'Kimi Antonelli', 'Lando Norris', 'Oscar Piastri', 'Max Verstappen'],
-  nba: ['Shai Gilgeous-Alexander', 'Jalen Brunson', 'Victor Wembanyama', 'Luka Dončić', 'Nikola Jokić'],
-};
-
 const PERSON_WIKI_TITLES = {
   'Rodri': 'Rodri (footballer, born 1996)', 'Vitinha': 'Vitinha (footballer, born February 2000)',
   'Luis Díaz': 'Luis Díaz (footballer, born 1997)', 'Derlis González': 'Derlis González',
@@ -84,7 +53,7 @@ async function resolvePersonPhoto(name, type = 'football') {
     let title = PERSON_WIKI_TITLES[name] || name;
     let response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
     if (!response.ok) {
-      const profession = type === 'f1' ? 'racing driver' : type === 'nba' ? 'basketball player' : 'footballer';
+      const profession = sportConfig(type).profession;
       const query = `${name} ${profession}`;
       const search = await fetch(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=1`);
       if (!search.ok) return null;
@@ -108,8 +77,8 @@ function featuredPool(competition = 'all') {
 }
 
 function featuredLabel(key) {
-  if (key === 'formula1') return 'Fórmula 1';
-  if (key === 'nba') return 'NBA';
+  if (SPORTS[key]) return sportName(key);
+  if (key === 'formula1') return sportName('f1');
   return competitionById(key)?.name || 'Fútbol internacional';
 }
 
@@ -129,9 +98,11 @@ async function renderPlayerSpotlight(target, pool, type = 'football') {
 }
 
 function refreshPlayerSpotlights() {
-  renderPlayerSpotlight('#football-player-spotlight', featuredPool(state.competition));
-  renderPlayerSpotlight('#f1-player-spotlight', featuredPool('formula1'), 'f1');
-  renderPlayerSpotlight('#nba-player-spotlight', featuredPool('nba'), 'nba');
+  SPORT_ROUTES.forEach((route) => {
+    const sport = sportConfig(route);
+    const featuredKey = route === 'football' ? state.competition : sport.featuredKey;
+    renderPlayerSpotlight(sport.spotlightTarget, featuredPool(featuredKey), route);
+  });
 }
 
 setInterval(() => {
@@ -225,12 +196,13 @@ function identityBadge(name, kind = 'football') {
 }
 
 function newsCard(article) {
+  const sport = sportConfig(article.sport);
   const competition = article.sport === 'football' ? competitionById(article.competition) : null;
-  const category = competition?.name || (article.sport === 'nba' ? 'NBA' : 'Fórmula 1');
+  const category = competition?.name || sport.name;
   const status = state.editorial[article.id];
-  const media = article.media || MEDIA[article.sport];
+  const media = article.media || sport.media;
   return `
-    <article class="news-card ${article.sport === 'f1' ? 'f1-card' : article.sport === 'nba' ? 'nba-card' : ''}">
+    <article class="news-card ${article.sport === 'football' ? '' : `${article.sport}-card`}">
       <div class="news-visual">
         <img class="news-image" src="${media.url}" alt="${media.alt}" loading="lazy" decoding="async">
         <span class="visual-code">${article.visual}</span>
@@ -238,7 +210,7 @@ function newsCard(article) {
         <a class="media-credit" href="${media.source || article.url}" target="_blank" rel="noreferrer">${media.credit}</a>
       </div>
       <div class="news-body">
-        <div class="news-meta"><span class="news-category">${article.sport === 'football' ? 'Fútbol' : article.sport === 'nba' ? 'Básquetbol' : 'Fórmula 1'} · ${category}</span><span>${article.published}</span></div>
+        <div class="news-meta"><span class="news-category">${sport.contentLabel} · ${category}</span><span>${article.published}</span></div>
         <h3>${article.title}</h3>
         <p>${article.summary}</p>
         <div class="news-source">
@@ -485,6 +457,12 @@ function renderNBA() {
   $$('.nba-panel').forEach((panel) => hydrateTeamLogos(panel));
 }
 
+const SPORT_RENDERERS = {
+  football: renderFootball,
+  f1: renderF1,
+  nba: renderNBA,
+};
+
 function setRoute(route) {
   state.route = route;
   $$('.view').forEach((view) => {
@@ -499,9 +477,7 @@ function setRoute(route) {
   });
   $('#mobile-nav').hidden = true;
   $('#menu-button').setAttribute('aria-expanded', 'false');
-  if (route === 'football') renderFootball();
-  if (route === 'f1') renderF1();
-  if (route === 'nba') renderNBA();
+  SPORT_RENDERERS[route]?.();
   if (route === 'admin') renderAdmin();
   refreshPlayerSpotlights();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -514,7 +490,7 @@ function renderAdmin() {
   $('#admin-summary').innerHTML = EDITORIAL_STATUSES.map((status, index) => `<div class="summary-card" style="--summary-color:${colors[index]}"><span>${status}</span><b>${counts[status]}</b><i></i></div>`).join('');
   $('#queue-count').textContent = ARTICLES.length;
   $('#log-count').textContent = state.log.length;
-  $('#review-list').innerHTML = ARTICLES.map((article) => `<button class="review-item ${state.selectedArticle === article.id ? 'active' : ''}" data-review-id="${article.id}" style="--item-color:${article.sport === 'f1' ? '#ff4036' : article.sport === 'nba' ? '#17408b' : '#2ee6a6'}"><i></i><span><b>${article.title}</b><small>${article.source} · ${article.reviewed}</small></span><span class="state-pill">${state.editorial[article.id]}</span></button>`).join('');
+  $('#review-list').innerHTML = ARTICLES.map((article) => `<button class="review-item ${state.selectedArticle === article.id ? 'active' : ''}" data-review-id="${article.id}" style="--item-color:${sportConfig(article.sport).accent}"><i></i><span><b>${article.title}</b><small>${article.source} · ${article.reviewed}</small></span><span class="state-pill">${state.editorial[article.id]}</span></button>`).join('');
   $$('.review-item').forEach((button) => button.addEventListener('click', () => {
     state.selectedArticle = button.dataset.reviewId;
     renderAdmin();
@@ -534,7 +510,8 @@ function renderReviewDetail(id) {
     'El resumen está escrito con palabras propias',
     'No contiene imágenes sin permiso de uso',
   ];
-  $('#review-panel').innerHTML = `<div class="review-detail"><h3>${article.title}</h3><p>${article.summary}</p><div class="review-meta"><div><small>Deporte y competición</small><b>${article.sport === 'f1' ? 'Fórmula 1' : article.sport === 'nba' ? 'NBA' : competitionById(article.competition)?.name}</b></div><div><small>Última revisión</small><b>${article.reviewed}</b></div><div><small>Fuente</small><a href="${article.url}" target="_blank" rel="noreferrer">${article.source} ↗</a></div><div><small>Derechos</small><b>${article.rights}</b></div></div><div class="status-select"><label for="editorial-status">Estado editorial</label><select id="editorial-status">${EDITORIAL_STATUSES.map((status) => `<option ${state.editorial[id] === status ? 'selected' : ''}>${status}</option>`).join('')}</select></div><div class="editorial-checklist"><b>Checklist obligatorio</b>${checks.map((check, index) => `<label><input type="checkbox" data-check="${index}"><span>${check}</span></label>`).join('')}</div><button class="save-review" id="save-review" disabled>Registrar revisión</button></div>`;
+  const editorialCategory = article.sport === 'football' ? competitionById(article.competition)?.name : sportName(article.sport);
+  $('#review-panel').innerHTML = `<div class="review-detail"><h3>${article.title}</h3><p>${article.summary}</p><div class="review-meta"><div><small>Deporte y competición</small><b>${editorialCategory}</b></div><div><small>Última revisión</small><b>${article.reviewed}</b></div><div><small>Fuente</small><a href="${article.url}" target="_blank" rel="noreferrer">${article.source} ↗</a></div><div><small>Derechos</small><b>${article.rights}</b></div></div><div class="status-select"><label for="editorial-status">Estado editorial</label><select id="editorial-status">${EDITORIAL_STATUSES.map((status) => `<option ${state.editorial[id] === status ? 'selected' : ''}>${status}</option>`).join('')}</select></div><div class="editorial-checklist"><b>Checklist obligatorio</b>${checks.map((check, index) => `<label><input type="checkbox" data-check="${index}"><span>${check}</span></label>`).join('')}</div><button class="save-review" id="save-review" disabled>Registrar revisión</button></div>`;
   const checkboxes = $$('[data-check]', $('#review-panel'));
   const save = $('#save-review');
   const validate = () => { save.disabled = !checkboxes.every((checkbox) => checkbox.checked); };
@@ -550,9 +527,18 @@ function renderReviewDetail(id) {
 function globalResults(query) {
   if (query.length < 2) return [];
   const normalized = query.toLowerCase();
-  const articles = ARTICLES.filter((item) => `${item.title} ${item.summary} ${item.source}`.toLowerCase().includes(normalized)).map((item) => ({ title: item.title, detail: `${item.source} · ${item.sport === 'f1' ? 'Fórmula 1' : item.sport === 'nba' ? 'NBA' : 'Fútbol'}`, url: item.url }));
+  const articles = ARTICLES.filter((item) => `${item.title} ${item.summary} ${item.source}`.toLowerCase().includes(normalized)).map((item) => ({ title: item.title, detail: `${item.source} · ${sportName(item.sport)}`, url: item.url }));
   const competitions = COMPETITIONS.filter((item) => `${item.name} ${item.region}`.toLowerCase().includes(normalized)).map((item) => ({ title: item.name, detail: `${item.region} · Fuente oficial`, url: item.url }));
   return [...articles, ...competitions];
+}
+
+function bindSportTabs(sport) {
+  const attribute = `data-${sport}-tab`;
+  $$(`[${attribute}]`).forEach((button) => button.addEventListener('click', () => {
+    $$(`[${attribute}]`).forEach((item) => item.classList.toggle('active', item === button));
+    const tab = button.dataset[`${sport}Tab`];
+    $$(`.${sport}-panel`).forEach((panel) => { panel.hidden = panel.id !== `${sport}-${tab}-panel`; });
+  }));
 }
 
 function bindEvents() {
@@ -642,15 +628,8 @@ function bindEvents() {
     $$('.tab-panel').forEach((panel) => { panel.hidden = panel.id !== `football-${button.dataset.footballTab}-panel`; });
   }));
 
-  $$('[data-f1-tab]').forEach((button) => button.addEventListener('click', () => {
-    $$('[data-f1-tab]').forEach((item) => item.classList.toggle('active', item === button));
-    $$('.f1-panel').forEach((panel) => { panel.hidden = panel.id !== `f1-${button.dataset.f1Tab}-panel`; });
-  }));
-
-  $$('[data-nba-tab]').forEach((button) => button.addEventListener('click', () => {
-    $$('[data-nba-tab]').forEach((item) => item.classList.toggle('active', item === button));
-    $$('.nba-panel').forEach((panel) => { panel.hidden = panel.id !== `nba-${button.dataset.nbaTab}-panel`; });
-  }));
+  bindSportTabs('f1');
+  bindSportTabs('nba');
 
   const overlay = $('#search-overlay');
   $('#open-search').addEventListener('click', () => { overlay.hidden = false; $('#global-search').focus(); });
@@ -682,7 +661,7 @@ function init() {
   renderF1();
   bindEvents();
   const initialRoute = location.hash.replace('#', '');
-  if (['football', 'f1', 'nba', 'admin'].includes(initialRoute)) setRoute(initialRoute);
+  if ([...SPORT_ROUTES, 'admin'].includes(initialRoute)) setRoute(initialRoute);
 }
 
 init();
