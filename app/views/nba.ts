@@ -9,5 +9,11 @@ export const NBA_VIEW = String.raw`
     </section>
     <div class="nba-subnav" role="tablist" aria-label="Contenido de NBA"><button class="active" data-nba-tab="news">Noticias</button><button data-nba-tab="upcoming">Próximos partidos</button><button data-nba-tab="results">Últimos resultados</button><button data-nba-tab="east">Conferencia Este</button><button data-nba-tab="west">Conferencia Oeste</button><button data-nba-tab="teams">Equipos</button></div>
     <section class="section-wrap nba-content"><div class="nba-panel" id="nba-news-panel"><div class="news-grid" id="nba-news"></div></div><div class="nba-panel" id="nba-upcoming-panel" hidden></div><div class="nba-panel" id="nba-results-panel" hidden></div><div class="nba-panel" id="nba-east-panel" hidden></div><div class="nba-panel" id="nba-west-panel" hidden></div><div class="nba-panel" id="nba-teams-panel" hidden></div></section>
-  </section>
+  
+    <nav class="sport-switcher" aria-label="Cambiar de deporte">
+      <button data-route="f1">← Fórmula 1</button>
+      <button data-route="football">Fútbol →</button>
+    </nav>
+
+    </section>
 `;

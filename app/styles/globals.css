@@ -468,3 +468,29 @@ dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }.di
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; } * { transition: none !important; }
 }
+
+.sport-switcher {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 32px clamp(18px, 5vw, 72px);
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.sport-switcher button {
+  min-width: 160px;
+  padding: 16px 22px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sport-switcher button:hover {
+  color: var(--bg);
+  background: var(--football);
+  border-color: var(--football);
+}

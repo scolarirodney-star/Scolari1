@@ -595,6 +595,22 @@ function bindEvents() {
     $('#menu-button').setAttribute('aria-expanded', String(open));
   });
 
+
+  $('#menu-button').addEventListener('mouseenter' , () => 
+    {$('#mobile-nav').hidden=false;
+    $('#menu-button').setAttribute('aria-expanded', 'true');}
+  )
+
+$('#mobile-nav').addEventListener('mouseleave', () => 
+  {$('#mobile-nav').hidden = true
+    $('#menu-button').setAttribute('aria-expanded' , 'false');}
+  )
+
+$('#contenido').addEventListener('mouseenter', () => 
+  {$('#mobile-nav').hidden = true;
+  $('#menu-button').setAttribute('aria-expanded', 'false');
+});
+
   $$('[data-event-scroll]').forEach((button) => button.addEventListener('click', () => {
     const track = document.getElementById(button.dataset.eventScroll);
     if (!track) return;

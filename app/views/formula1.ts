@@ -9,5 +9,12 @@ export const FORMULA1_VIEW = String.raw`
     </section>
     <div class="f1-subnav" role="tablist" aria-label="Contenido de Fórmula 1"><button class="active" data-f1-tab="news">Noticias</button><button data-f1-tab="calendar">Calendario</button><button data-f1-tab="race">Resultados</button><button data-f1-tab="drivers">Pilotos</button><button data-f1-tab="constructors">Constructores</button><button data-f1-tab="profiles">Equipos y fichas</button></div>
     <section class="section-wrap f1-content"><div class="f1-panel" id="f1-news-panel"><div class="news-grid" id="f1-news"></div></div><div class="f1-panel" id="f1-calendar-panel" hidden></div><div class="f1-panel" id="f1-race-panel" hidden></div><div class="f1-panel" id="f1-drivers-panel" hidden></div><div class="f1-panel" id="f1-constructors-panel" hidden></div><div class="f1-panel" id="f1-profiles-panel" hidden></div></section>
-  </section>
+  
+     <nav class="sport-switcher" aria-label="Cambiar de deporte">
+      <button data-route="football">← Fútbol</button>
+      <button data-route="nba">NBA →</button>
+      </nav>
+      
+    </section>
+     
 `;
