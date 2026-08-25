@@ -59,6 +59,8 @@ a { color: inherit; text-decoration: none; }
 .menu-button { display: block; padding: 0 14px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 .mobile-nav { position: fixed; top: 114px; left: 0; right: 0; z-index: 90; padding: 14px 18px 22px; background: var(--surface); border-bottom: 1px solid var(--line); }
 .mobile-nav button { width: 100%; padding: 14px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; font-size: 14px; font-weight: 800; }
+.mobile-nav .mobile-search-button { display: flex; align-items: center; gap: 10px; }
+.mobile-search-button span { font-size: 22px; font-weight: 500; line-height: 1; }
 
 .view { min-height: 70vh; }
 .home-hero { min-height: 650px; display: grid; grid-template-columns: 1.08fr .92fr; overflow: hidden; border-bottom: 1px solid var(--line); }

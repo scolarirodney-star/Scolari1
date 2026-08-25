@@ -689,7 +689,14 @@ $('#contenido').addEventListener('mouseenter', () =>
   bindSportTabs('nba');
 
   const overlay = $('#search-overlay');
-  $('#open-search').addEventListener('click', () => { overlay.hidden = false; $('#global-search').focus(); });
+  const openSearch = () => {
+    overlay.hidden = false;
+    $('#mobile-nav').hidden = true;
+    $('#menu-button').setAttribute('aria-expanded', 'false');
+    $('#global-search').focus();
+  };
+  $('#open-search').addEventListener('click', openSearch);
+  $('#open-menu-search').addEventListener('click', openSearch);
   $('.search-close').addEventListener('click', () => { overlay.hidden = true; });
   $('#global-search').addEventListener('input', debounce((event) => {
     const query = event.target.value.trim();

@@ -17,7 +17,7 @@ const PROTOTYPE_HTML = String.raw`
     <nav class="primary-nav" aria-label="Navegación principal"><button class="nav-button active" data-route="home" aria-pressed="true"><span>00</span> Portada</button>${primarySportNav}</nav>
     <div class="header-actions"><button class="icon-button" id="open-search" aria-label="Abrir buscador">⌕</button><button class="menu-button" id="menu-button" aria-label="Abrir menú" aria-expanded="false">Menú</button></div>
   </header>
-  <div class="mobile-nav" id="mobile-nav" hidden><button data-route="home">Portada</button>${mobileSportNav}</div>
+  <div class="mobile-nav" id="mobile-nav" hidden><button class="mobile-search-button" id="open-menu-search" type="button" aria-label="Abrir buscador"><span aria-hidden="true">⌕</span> Buscar</button><button data-route="home">Portada</button>${mobileSportNav}</div>
   <main id="contenido" tabindex="-1">
     ${HOME_VIEW}
     ${FOOTBALL_VIEW}
