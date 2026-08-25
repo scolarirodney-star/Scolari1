@@ -411,6 +411,7 @@ dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }.di
 @media (max-width: 1080px) {
   .site-header { grid-template-columns: 1fr auto; }.primary-nav { display: none; }.admin-button { display: none; }.menu-button { display: block; }
   .home-hero { grid-template-columns: 1fr; }.hero-visual { min-height: 420px; border-left: 0; border-top: 1px solid var(--line); }
+  .coverage-mosaic { inset: 0; transform: none; }.coverage-sport > span, .coverage-sport > b { transform: none; }.hero-score { max-width: calc(100% - 32px); }
   .sport-split { grid-template-columns: repeat(2, minmax(0, 1fr)); }.sport-entry:first-child { grid-column: 1 / -1; min-height: 280px; }.sport-entry h2 { font-size: clamp(40px, 5.4vw, 58px); }
   .sport-player { width: 58%; opacity: .72; }
   .sport-player .player-caption { display: none; }
@@ -426,7 +427,7 @@ dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }.di
 @media (max-width: 760px) {
   .prototype-bar p, .prototype-bar time { display: none; }.site-header { height: 72px; }.mobile-nav { top: 102px; }
   .brand b { font-size: 15px; }.brand small { display: none; }.icon-button { display: none; }
-  .hero-copy { padding: 62px 22px 56px; }.hero-copy h1, .sport-hero h1 { font-size: 58px; }.hero-visual { min-height: 340px; }.coverage-mosaic { inset: -3% -7%; grid-template-columns: 1.05fr .9fr .95fr; }.coverage-sport { padding: 28px 16px; }.coverage-sport > b { font-size: clamp(24px, 8vw, 34px); }.coverage-sport > span { font-size: 8px; }.hero-score { top: 18px; width: 120px; padding: 14px; }.hero-score b { font-size: 50px; }
+  .hero-copy { padding: 62px 22px 56px; }.hero-copy h1, .sport-hero h1 { font-size: 58px; }.hero-visual { min-height: 340px; }.coverage-mosaic { inset: 0; grid-template-columns: 1.05fr .9fr .95fr; }.coverage-sport { padding: 28px 12px; }.coverage-sport > b { font-size: clamp(22px, 7.5vw, 32px); }.coverage-sport > span { font-size: 8px; }.hero-score { top: 18px; width: 120px; max-width: calc(100% - 36px); padding: 14px; overflow: visible; }.hero-score small, .hero-score span { white-space: nowrap; }.hero-score b { font-size: 50px; }
   .hero-actions { flex-direction: column; align-items: stretch; }.primary-action, .secondary-action { width: 100%; }
   .section-wrap { padding: 58px 18px; }.section-head { align-items: start; flex-direction: column; }.section-head > div:first-child { padding-left: 30px; }.segmented { max-width: 100%; overflow-x: auto; }
   .news-card, .news-card:first-child { grid-column: 1 / -1; }.news-card { min-height: 330px; }
