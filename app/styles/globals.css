@@ -155,7 +155,8 @@ a { color: inherit; text-decoration: none; }
 .ad-slot { max-width: 970px; min-height: 90px; margin: 0 auto 30px; padding: 15px 22px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; border: 1px dashed rgba(255,255,255,.18); color: #657277; }
 .ad-slot span { font-size: 7px; letter-spacing: .14em; transform: rotate(-90deg); }.ad-slot p { margin: 0; text-align: center; font-size: 12px; }.ad-slot small { font-size: 8px; }
 .sport-split { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.sport-entry { min-height: 330px; padding: 36px; display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; gap: 24px; border-radius: var(--radius); overflow: hidden; position: relative; }
+.sport-entry { min-height: 330px; padding: 36px; display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; gap: 24px; border-radius: var(--radius); overflow: hidden; position: relative; transition: transform .35s ease, box-shadow .35s ease; }
+.sport-entry:hover { transform: translateY(-4px); box-shadow: 0 22px 50px rgba(0,0,0,.28); }
 .sport-entry > div:nth-child(2) { min-width: 0; }
 .football-entry { color: #04100c; background: var(--football); }.f1-entry { background: var(--f1); }
 .nba-entry { background: linear-gradient(135deg, var(--nba-blue) 0 58%, var(--nba-red) 58%); }
@@ -168,14 +169,14 @@ a { color: inherit; text-decoration: none; }
 .nba-entry button { background: white; color: #07152f; }
 .sport-entry button > span:last-child { margin-left: 12px; }
 .sport-entry button .btn-anim { display: inline-flex; align-items: center; justify-content: center; width: 0; margin-left: 0; overflow: hidden; opacity: 0; transition: width .35s ease, opacity .25s ease, margin-left .35s ease; }
-.sport-entry button:hover .btn-anim, .sport-entry button:focus-visible .btn-anim { width: 24px; margin-left: 16px; opacity: 1; }
+.sport-entry:hover .btn-anim, .sport-entry button:focus-visible .btn-anim { width: 24px; margin-left: 16px; opacity: 1; }
 .anim-icon .ball { transform-box: fill-box; transform-origin: center; transition: transform .55s cubic-bezier(.34,1.56,.64,1); }
-.sport-entry button:hover .anim-football .ball, .sport-entry button:focus-visible .anim-football .ball { transform: translate(9px, -12px) scale(.85); }
-.sport-entry button:hover .anim-nba .ball, .sport-entry button:focus-visible .anim-nba .ball { transform: translate(8px, 15px) scale(.8); }
+.sport-entry:hover .anim-football .ball, .sport-entry button:focus-visible .anim-football .ball { transform: translate(9px, -12px) scale(.85); }
+.sport-entry:hover .anim-nba .ball, .sport-entry button:focus-visible .anim-nba .ball { transform: translate(8px, 15px) scale(.8); }
 .anim-f1 .flag-group { transform-box: fill-box; transform-origin: left center; transition: transform .45s ease; }
 .anim-f1 .speed-line { opacity: 0; transform: translateX(2px); transition: opacity .3s ease, transform .4s ease; }
-.sport-entry button:hover .anim-f1 .flag-group, .sport-entry button:focus-visible .anim-f1 .flag-group { transform: skewY(-16deg) rotate(-8deg); }
-.sport-entry button:hover .anim-f1 .speed-line, .sport-entry button:focus-visible .anim-f1 .speed-line { opacity: .9; transform: translateX(-6px); }
+.sport-entry:hover .anim-f1 .flag-group, .sport-entry button:focus-visible .anim-f1 .flag-group { transform: skewY(-16deg) rotate(-8deg); }
+.sport-entry:hover .anim-f1 .speed-line, .sport-entry button:focus-visible .anim-f1 .speed-line { opacity: .9; transform: translateX(-6px); }
 
 .sport-hero { min-height: 440px; padding: 72px clamp(18px, 7vw, 105px); display: grid; grid-template-columns: 1fr auto; align-items: end; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
 .football-hero { background: radial-gradient(circle at 78% 50%, #153d31 0%, #07100e 43%, var(--bg) 72%); }
