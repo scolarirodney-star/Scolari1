@@ -163,10 +163,19 @@ a { color: inherit; text-decoration: none; }
 .sport-entry h2 { margin: 10px 0; font-size: clamp(38px, 4vw, 62px); line-height: .9; letter-spacing: -.07em; text-transform: uppercase; }
 .sport-entry p:not(.overline) { max-width: 440px; font-size: 13px; line-height: 1.5; opacity: .75; }
 .sport-entry .overline { color: currentColor; opacity: .7; }
-.sport-entry button { grid-column: 2; justify-self: start; background: #07100d; color: white; }
+.sport-entry button { grid-column: 2; justify-self: start; display: inline-flex; align-items: center; background: #07100d; color: white; }
 .f1-entry button { background: white; color: #200606; }
 .nba-entry button { background: white; color: #07152f; }
-.sport-entry button span { margin-left: 28px; }
+.sport-entry button > span:last-child { margin-left: 12px; }
+.sport-entry button .btn-anim { display: inline-flex; align-items: center; justify-content: center; width: 0; margin-left: 0; overflow: hidden; opacity: 0; transition: width .35s ease, opacity .25s ease, margin-left .35s ease; }
+.sport-entry button:hover .btn-anim, .sport-entry button:focus-visible .btn-anim { width: 24px; margin-left: 16px; opacity: 1; }
+.anim-icon .ball { transform-box: fill-box; transform-origin: center; transition: transform .55s cubic-bezier(.34,1.56,.64,1); }
+.sport-entry button:hover .anim-football .ball, .sport-entry button:focus-visible .anim-football .ball { transform: translate(9px, -12px) scale(.85); }
+.sport-entry button:hover .anim-nba .ball, .sport-entry button:focus-visible .anim-nba .ball { transform: translate(8px, 15px) scale(.8); }
+.anim-f1 .flag-group { transform-box: fill-box; transform-origin: left center; transition: transform .45s ease; }
+.anim-f1 .speed-line { opacity: 0; transform: translateX(2px); transition: opacity .3s ease, transform .4s ease; }
+.sport-entry button:hover .anim-f1 .flag-group, .sport-entry button:focus-visible .anim-f1 .flag-group { transform: skewY(-16deg) rotate(-8deg); }
+.sport-entry button:hover .anim-f1 .speed-line, .sport-entry button:focus-visible .anim-f1 .speed-line { opacity: .9; transform: translateX(-6px); }
 
 .sport-hero { min-height: 440px; padding: 72px clamp(18px, 7vw, 105px); display: grid; grid-template-columns: 1fr auto; align-items: end; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
 .football-hero { background: radial-gradient(circle at 78% 50%, #153d31 0%, #07100e 43%, var(--bg) 72%); }
