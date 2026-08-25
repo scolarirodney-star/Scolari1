@@ -489,8 +489,20 @@ dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }.di
   cursor: pointer;
 }
 
-.sport-switcher button:hover {
+.sport-switcher button[data-route="football"]:hover {
   color: var(--bg);
   background: var(--football);
   border-color: var(--football);
+}
+
+.sport-switcher button[data-route="f1"]:hover {
+  color: white;
+  background: var(--f1);
+  border-color: var(--f1);
+}
+
+.sport-switcher button[data-route="nba"]:hover {
+  color: white;
+  background: #17408b;
+  border-color: #17408b;
 }
