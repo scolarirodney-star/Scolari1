@@ -29,3 +29,5 @@ Los datos pueden conservarse mientras la sección esté oculta, evitando tener q
 ## Regla de mantenimiento
 
 La configuración compartida debe vivir en `app/config/sports.js`. La vista de un deporte no debe contener datos deportivos y el catálogo de datos no debe contener estilos ni estructura visual.
+
+Las actualizaciones de noticias, resultados, clasificaciones o equipos deben seguir el procedimiento de actualización bajo demanda definido en `docs/ARCHITECTURE.md`.
