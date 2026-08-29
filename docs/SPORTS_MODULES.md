@@ -4,7 +4,7 @@
 
 1. Cambiar nombre, color, imagen, protagonistas o textos de portada en `app/config/sports.js`.
 2. Cambiar la estructura exclusiva del deporte en su archivo dentro de `app/views/`.
-3. Cambiar noticias, resultados, clasificaciones o equipos en `app/data/index.js`.
+3. Cambiar noticias, resultados, clasificaciones o equipos en el archivo de datos de ese deporte: `app/data/football.js`, `app/data/formula1.js` o `app/data/nba.js`. `app/data/index.js` solo reexporta y no debe contener datos deportivos propios.
 4. Ajustar únicamente sus estilos específicos en `app/styles/globals.css`.
 
 ## Agregar un deporte
@@ -29,5 +29,7 @@ Los datos pueden conservarse mientras la sección esté oculta, evitando tener q
 ## Regla de mantenimiento
 
 La configuración compartida debe vivir en `app/config/sports.js`. La vista de un deporte no debe contener datos deportivos y el catálogo de datos no debe contener estilos ni estructura visual.
+
+Cada archivo de datos (`football.js`, `formula1.js`, `nba.js`) conserva sus propios artículos (`FOOTBALL_ARTICLES`, `F1_ARTICLES`, `NBA_ARTICLES`); `app/data/index.js` los combina en `ARTICLES` respetando el orden histórico de publicación.
 
 Las actualizaciones de noticias, resultados, clasificaciones o equipos deben seguir el procedimiento de actualización bajo demanda definido en `docs/ARCHITECTURE.md`.

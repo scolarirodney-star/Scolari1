@@ -6,8 +6,12 @@ La interfaz funcional se ejecuta como una aplicación estática organizada por r
 
 - `app/config/sports.js`: registro central de deportes, nombres, colores, imágenes y contenido de portada.
 - `app/views/`: una vista independiente por deporte y otra para la portada.
-- `app/data/index.js`: catálogo único de datos demostrativos y sus fuentes.
-- `app/client/site.js`: renderizadores, navegación e interacciones del navegador.
+- `app/data/`: catálogo de datos demostrativos y sus fuentes, separado por deporte:
+  - `app/data/football.js`: competiciones, resultados, próximos partidos, tablas y artículos de Fútbol.
+  - `app/data/formula1.js`: calendario, pilotos, constructores, resultado de carrera, perfiles de equipo y artículos de Fórmula 1.
+  - `app/data/nba.js`: próximos partidos, resultados, posiciones, equipos y artículos de NBA.
+  - `app/data/index.js`: punto único de exportación. Reexporta los tres archivos anteriores, reconstruye `ARTICLES` (todos los deportes combinados, en el mismo orden histórico) y conserva `EDITORIAL_STATUSES` y `LEGAL_COPY`.
+- `app/client/site.js`: renderizadores, navegación e interacciones del navegador. Sigue importando todo desde `app/data/index.js`.
 - `app/styles/globals.css`: sistema visual compartido y variantes por deporte.
 
 La navegación, los filtros de portada, los protagonistas rotativos y los colores editoriales toman su información del registro central. Agregar o retirar un deporte ya no exige repetir esa configuración en varios lugares.
