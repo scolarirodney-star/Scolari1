@@ -101,4 +101,20 @@ export const F1_ARTICLES = [
     url: 'https://www.formula1.com/', reviewed: '24 ago 2026 · 14:20',
     status: 'Borrador', rights: 'Texto propio · Sin imagen',
   },
+  {
+    id: 'f1-norris-mclaren-2030', sport: 'f1', competition: 'formula1', visual: 'F1',
+    title: 'Norris renueva con McLaren hasta el final de 2030',
+    summary: 'El campeón 2025 extendió su vínculo con el equipo, que antes vencía en 2027. El acuerdo alinea su continuidad con la de su compañero Oscar Piastri. Los detalles completos del anuncio están en la fuente oficial.',
+    published: '29 ago 2026', publishedISO: '2026-08-29', source: 'Formula1.com',
+    url: 'https://www.formula1.com/en/latest/article/lando-norris-commits-future-to-mclaren-as-he-signs-new-deal-until-the-end-of-2030.7ErHTktjoW2mAo5zEEtuA0', reviewed: '29 ago 2026 · 13:47',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'f1-italy-monza-schedule', sport: 'f1', competition: 'formula1', visual: 'F1',
+    title: 'Confirmado el cronograma del Gran Premio de Italia en Monza',
+    summary: 'Formula1.com publicó los horarios completos del fin de semana del 4 al 6 de septiembre: prácticas, clasificación y una carrera pautada a 53 vueltas o 120 minutos. La grilla horaria detallada permanece en la fuente.',
+    published: 'Fecha no visible en portada', publishedISO: '2026-08-29', source: 'Formula1.com',
+    url: 'https://www.formula1.com/en/latest/article/formula-1-pirelli-gran-premio-ditalia-2026.7zaXkRgenHXVVXXGb1RGcf', reviewed: '29 ago 2026 · 13:47',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
 ];

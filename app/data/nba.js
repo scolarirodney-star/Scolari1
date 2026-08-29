@@ -77,4 +77,28 @@ export const NBA_ARTICLES = [
     url: 'https://www.nba.com/news/knicks-rally-win-nba-title', reviewed: '24 ago 2026 · 17:30',
     status: 'Publicada', rights: 'Resumen propio · Imagen ilustrativa CC0',
   },
+  {
+    id: 'nba-lowry-jersey-retirement', sport: 'nba', visual: 'RAP',
+    title: 'Los Raptors retirarán la camiseta N.° 7 de Kyle Lowry',
+    summary: 'Toronto anunció que la ceremonia será el 10 de enero de 2027, tras el partido ante Philadelphia, como cierre de un fin de semana especial con Minnesota y Utah como rivales previos. El comunicado completo está en la fuente.',
+    published: '27 ago 2026', publishedISO: '2026-08-27', source: 'NBA.com',
+    url: 'https://www.nba.com/news/kyle-lowry-raptors-jersey-retirement-announcement', reviewed: '29 ago 2026 · 13:47',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'nba-fiba-qualifiers-2027', sport: 'nba', visual: 'FIBA',
+    title: 'Jugadores de la NBA se destacaron en la clasificación al Mundial FIBA 2027',
+    summary: 'Durante la ventana de clasificación del 27 al 31 de agosto, figuras de la NBA sobresalieron con sus selecciones, entre ellas Wembanyama con Francia, Hachimura con Japón y Missi con Camerún. El repaso completo por selección está en la fuente.',
+    published: '28 ago 2026', publishedISO: '2026-08-28', source: 'NBA.com',
+    url: 'https://www.nba.com/news/nba-players-fiba-world-cup-qualifiers-august-2026', reviewed: '29 ago 2026 · 13:47',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'nba-cavaliers-watson-trade', sport: 'nba', visual: 'TRADE',
+    title: 'Cavaliers se refuerzan con Peyton Watson en un traspaso de cinco equipos',
+    summary: 'Cleveland incorporó a Peyton Watson (ex Nuggets) y Cam Whitmore (ex Wizards) en una operación que también involucró a Clippers, Hornets y Denver, con salida de Max Strus y llegada de Dennis Schröder a Charlotte. Los términos completos están en la fuente.',
+    published: '22 ago 2026', publishedISO: '2026-08-22', source: 'NBA.com',
+    url: 'https://www.nba.com/news/peyton-watson-trade-cavaliers', reviewed: '29 ago 2026 · 13:47',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
 ];
