@@ -262,6 +262,46 @@ export const FOOTBALL_STANDINGS = {
 
 export const FOOTBALL_ARTICLES = [
   {
+    id: 'ucl-league-phase-lineup-2026', sport: 'football', competition: 'champions', visual: 'UCL',
+    title: 'La fase de liga de la Champions ya tiene sus 36 participantes',
+    summary: 'UEFA confirmó el cierre de los play-offs y la incorporación de Fenerbahçe, Viking, AEK Athens, Slovan Bratislava, Sabah, Bodø/Glimt y LASK al cuadro de la fase de liga. El repaso completo de las eliminatorias permanece en la fuente oficial.',
+    published: '26 ago 2026', publishedISO: '2026-08-26', source: 'UEFA.com',
+    url: 'https://www.uefa.com/uefachampionsleague/news/02a8-216f6e7c7e3c-fa74783c353d-1000--champions-league-play-off-second-leg-highlights-and-roun/', reviewed: '29 ago 2026 · 13:49',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'premier-matchweek-two-questions', sport: 'football', competition: 'premier', visual: 'PL',
+    title: 'La segunda jornada de la Premier abre nuevas preguntas deportivas',
+    summary: 'El análisis oficial identifica los principales duelos tácticos y narrativos de la fecha, desde la reacción del Manchester United hasta los retos de Arsenal, Liverpool y Chelsea. El desarrollo completo pertenece a PremierLeague.com.',
+    published: '28 ago 2026', publishedISO: '2026-08-28', source: 'PremierLeague.com',
+    url: 'https://www.premierleague.com/en/news/4698606/key-questions-for-matchweek-2s-fixtures', reviewed: '29 ago 2026 · 13:49',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'bundesliga-bayern-stuttgart-opening-2026', sport: 'football', competition: 'bundesliga', visual: 'BL',
+    title: 'Bayern abre la Bundesliga con una goleada ante Stuttgart',
+    summary: 'El campeón inició la defensa del título con un 5-1 en Múnich. El informe oficial detalla los goleadores y el desarrollo del encuentro; ScolariX conserva únicamente este resumen y el enlace original.',
+    published: '29 ago 2026', publishedISO: '2026-08-29', source: 'Bundesliga.com',
+    url: 'https://www.bundesliga.com/en/bundesliga/news/bayern-munich-vfb-stuttgart-match-report-highlights-matchday-1-38853', reviewed: '29 ago 2026 · 13:49',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'ligue1-matchday-two-preview-2026', sport: 'football', competition: 'ligue1', visual: 'L1',
+    title: 'La segunda fecha de la Ligue 1 concentra nuevas historias',
+    summary: 'La previa oficial destaca el protagonismo que podría asumir Ferran Torres ante la ausencia de Ousmane Dembélé y repasa otros focos de la jornada. Los detalles completos permanecen en Ligue1.com.',
+    published: '28 ago 2026', publishedISO: '2026-08-28', source: 'Ligue1.com',
+    url: 'https://ligue1.com/en/articles/l1_article_5760-md-2-five-things-to-watch-in-ligue-1-mcdonald-s-this-weekend', reviewed: '29 ago 2026 · 13:49',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
+    id: 'apf-nacional-san-lorenzo-clausura-2026', sport: 'football', competition: 'paraguay', visual: 'APF',
+    title: 'Nacional celebra una victoria contundente como visitante',
+    summary: 'La Academia venció 3-0 a Sportivo San Lorenzo por la séptima fecha del Clausura. La APF registró los goles de Iván Valdez, Ignacio Bailone y Gastón Benítez, además de los próximos compromisos.',
+    published: 'Fecha no visible en la fuente', publishedISO: '2026-08-29', source: 'APF',
+    url: 'https://www.apf.org.py/noticias/la-academia-festeja-de-visitante', reviewed: '29 ago 2026 · 13:49',
+    status: 'Pendiente de revisión', rights: 'Resumen propio · Sin imagen',
+  },
+  {
     id: 'laliga-academy-value-2026', sport: 'football', competition: 'laliga', visual: 'LL',
     title: 'La cantera española vuelve a ocupar el centro del modelo deportivo',
     summary: 'Un análisis difundido por LALIGA reúne títulos y operaciones de mercado para medir el impacto competitivo y económico de formar talento propio. El documento y su metodología están disponibles en la publicación original.',
